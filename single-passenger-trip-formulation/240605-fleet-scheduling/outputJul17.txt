@@ -1,0 +1,115 @@
+min is 0, max is 45, goal is 22
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+Answer: 1
+revenue(71,3) revenue(0,4) revenue(69,4) revenue(41,4) revenue(70,4) revenue(3,4) cost(23)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 8.460s (Solving: 7.30s 1st Model: 7.30s Unsat: 0.00s)
+CPU Time     : 8.341s
+
+number of model is: 1
+-------------------
+min is 22, max is 45, goal is 37
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+UNSATISFIABLE
+
+Models       : 0
+Calls        : 1
+Time         : 2.106s (Solving: 0.91s 1st Model: 0.00s Unsat: 0.91s)
+CPU Time     : 2.027s
+
+number of model is: 0
+-------------------
+min is 22, max is 37, goal is 17
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+Answer: 1
+revenue(69,7) revenue(71,3) revenue(0,4) revenue(3,4) cost(18)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 1.151s (Solving: 0.01s 1st Model: 0.01s Unsat: 0.00s)
+CPU Time     : 1.135s
+
+number of model is: 1
+-------------------
+min is 17, max is 37, goal is 30
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+UNSATISFIABLE
+
+Models       : 0
+Calls        : 1
+Time         : 1.738s (Solving: 0.55s 1st Model: 0.00s Unsat: 0.55s)
+CPU Time     : 1.681s
+
+number of model is: 0
+-------------------
+min is 17, max is 30, goal is 14
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+Answer: 1
+revenue(69,7) revenue(71,3) revenue(0,4) cost(14)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 1.145s (Solving: 0.01s 1st Model: 0.01s Unsat: 0.00s)
+CPU Time     : 1.132s
+
+number of model is: 1
+-------------------
+min is 14, max is 30, goal is 24
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+Answer: 1
+revenue(197,1) revenue(71,3) revenue(0,4) revenue(41,4) revenue(70,4) revenue(3,8) cost(24)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 4.216s (Solving: 3.11s 1st Model: 3.11s Unsat: 0.00s)
+CPU Time     : 4.174s
+
+number of model is: 1
+-------------------
+min is 24, max is 30, goal is 30
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+UNSATISFIABLE
+
+Models       : 0
+Calls        : 1
+Time         : 1.625s (Solving: 0.52s 1st Model: 0.00s Unsat: 0.52s)
+CPU Time     : 1.609s
+
+number of model is: 0
+-------------------
+min is 24, max is 30, goal is 14
+output from terminal is: clingo version 5.6.2
+Reading from path_edge_weight.lp ...
+Solving...
+Answer: 1
+revenue(69,7) revenue(71,3) revenue(0,4) cost(14)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 1.147s (Solving: 0.01s 1st Model: 0.01s Unsat: 0.00s)
+CPU Time     : 1.098s
+
+number of model is: 1
+-------------------
+min is 14, max is 30, goal is 24

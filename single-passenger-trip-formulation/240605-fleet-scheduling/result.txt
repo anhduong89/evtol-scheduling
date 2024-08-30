@@ -1,0 +1,37 @@
+Weighted Edge-time Assignment; Number of Agents=10; Max Running Time=60; timestep=11
+Captured Optimization Value: 63
+first run 60 second
+next 300 second each
+10 sec grounding
+run; profit; time
+0, 63, 60
+1, 76, 42.6
+2, 86, 60
+3, 96, 76
+4, 108, 69
+5, 118, 147
+6, 130, 112
+
+
+
+Number of delivered people	runtime 
+51	0
+74	35
+86	91
+94	178
+104	61
+120	108
+132	64
+146	1321
+
+Number of delivered people	runtime 
+84 0
+120 43
+138 294
+152 206
+168 92
+186 66
+204 143
+228 299
+250 731
+276 2741
