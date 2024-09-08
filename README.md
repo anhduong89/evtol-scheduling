@@ -5,7 +5,7 @@
 | File | Content |
 |-------------|---------|
 |instance/gen_init.py| initialization of aircraft number and location
-|instance/init.py | aircraft location 
+|instance/init.lp | aircraft location 
 |instance/mer_lmp.lp|LMP value (MER is not yet available)|
 | instance/network.lp| vertiport network|
 | instance/rq.lp| trip request
