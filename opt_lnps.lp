@@ -17,3 +17,4 @@ revenue(N, W) :- edge_w((V, V'), W, T), request(N, V, V', WR, T), W <= WR.
 
 #show edge_w/3.
 #show node_w/3.
+#show distance_t/2.

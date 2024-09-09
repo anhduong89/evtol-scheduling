@@ -19,8 +19,9 @@
 #const minute_charged_per_mile = 1.
 % #const total_timesteps=11.
 
+% use to update the position of aircraft
 distance_t((V, V'), ((S/(speed*30))+1)*2) :- distance((V, V'), S), V != V'.
-distance_t((V, V), 1) :- edge(V, V).%horizon in minutes
+distance_t((V, V), 1) :- edge(V, V).
 
 horizon(180).
 time(0..total_steps).
@@ -46,6 +47,3 @@ node_w(V, C*4, 0) :- C = #count{D: init_loc(D, V)}, vertiport(V).
 
 % number of agents at V at step T is the sum of inbound agents to V from step T-S
 node_w(V, I, T) :- I = #sum{WI, VI: edge_w((VI, V), WI, T-S), distance_t((VI, V), S)}, vertiport(V), time(T), T > 0.
-
-
-#show weight/1.
