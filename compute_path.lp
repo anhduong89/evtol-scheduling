@@ -48,3 +48,4 @@ node_w(V, C*4, 0) :- C = #count{D: init_loc(D, V)}, vertiport(V).
 node_w(V, I, T) :- I = #sum{WI, VI: edge_w((VI, V), WI, T-S), distance_t((VI, V), S)}, vertiport(V), time(T), T > 0.
 
 
+#show weight/1.

@@ -9,7 +9,7 @@ def get(val, default):
 
 
 nAgents = int(sys.argv[1])
-fName = 'init.lp'
+fName = 'instance/init.lp'
 #init location
 #discharge rate
 #emax
