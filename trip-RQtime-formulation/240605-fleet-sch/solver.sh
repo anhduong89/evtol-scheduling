@@ -1,6 +1,5 @@
-#!/bin/bash
-# run only maximize the revenue; agent start with 0 battery and operation time is equivalent to sum of charge time + fly time.
 
+#!/bin/bash
 # Parse arguments
 DEMAND=20
 SEGMENT=10
@@ -27,18 +26,14 @@ done
 
 DEFAULT_CONF=" cp_path.lp assign_charge.lp time_schedule.lp opt.lp init.lp base_data.lp --outf=0 -V0 -q1 --out-atomf=%s. | tr ' ' '\n'  "
 
-root='/Users/duong/Work-Documents/NMSU/NASA_ULI_2022/git-public/evtol-scheduling/trip-has-RQtime-formulation/240815-lns-solv-fleet-sch'
-
-instance="$root/instance/init.lp $root/instance/mer_lmp.lp $root/instance/network.lp $root/instance/rq_small.lp"
-encoding="$root/encoding/opt_max_rev.lp $root/encoding/compute_path.lp"
 
 # DEMAND=${1:-$DEFAULT_DEMAND}
 # AGENT=${:-$DEFAULT_AGENT}
 # TIME_LIMIT=${3:-$DEFAULT_TIME}
-# python gen_init.py $AGENT
+python gen_init.py $AGENT
 # python gen_rq.py $DEMAND
 # clingo-dl path_edge_weight.lp time_schedule.lp opt.lp init.lp network.lp rq.lp mer_lmp.lp -n0 --time-limit=$TIME
 echo "Weighted Edge-time Assignment; Number of Agents=$AGENT ;Max Running Time=$TIME; timestep=$TIMESTEP"
-clingo $instance $encoding -q0 -t$THREAD --time-limit=$TIME --outf=0 -c timestep=$TIMESTEP --out-atomf=%s. #| tr ' ' '\n' 
+clingo compute_path.lp init.lp opt.lp network.lp rq_small.lp mer_lmp.lp -q0 -t$THREAD --time-limit=$TIME --outf=0 -c timestep=$TIMESTEP --out-atomf=%s. #| tr ' ' '\n' 
 # clingo path_edge_weight.lp init.lp opt.lp network.lp rq.lp mer_lmp.lp -n0 -t$THREAD --time-limit=$TIME
 # clingo-dl ${DEFAULT_CONF}
