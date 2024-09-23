@@ -1,0 +1,19 @@
+agent(0..2).
+init_loc(0, jfk).
+init_loc(1, lga).
+init_loc(2, teb).
+emax(0, 100).
+emax(1, 100).
+emax(2, 100).
+emin(0, 0).
+emin(1, 0).
+emin(2, 0).
+dischg_rate(0, 4).
+dischg_rate(1, 4).
+dischg_rate(2, 4).
+capacity(0, 4).
+capacity(1, 4).
+capacity(2, 4).
+init_battery(0, 36).
+init_battery(1, 16).
+init_battery(2, 30).

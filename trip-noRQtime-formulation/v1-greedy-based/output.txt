@@ -1,0 +1,92 @@
+clingo-dl version 1.4.0
+Reading from cp_path.lp ...
+Solving...
+Answer: 1
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),0) dl(afterCharge(0,3),0) dl(start(0,(tci,tci),2),0) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,tci),2) ch_time(0,0,0) ch_time(0,1,0) ch_time(0,2,0) cost(0,0,0) cost(0,0,1) cost(0,0,2)
+Optimization: 0 0
+Answer: 2
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),15) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),55) dl(afterCharge(0,3),15) dl(start(0,(tci,crj),2),55) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,crj),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(55,0,2) ch_time(0,2,11) cost(110,0,2)
+Optimization: -320 165
+Answer: 3
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),45) dl(afterCharge(0,3),5) dl(start(0,(tci,crj),2),45) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,crj),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(45,0,2) ch_time(0,2,9) cost(90,0,2)
+Optimization: -320 135
+Answer: 4
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),40) dl(afterCharge(0,3),0) dl(start(0,(tci,crj),2),40) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,crj),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(40,0,2) ch_time(0,2,8) cost(80,0,2)
+Optimization: -320 120
+Answer: 5
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),55) dl(afterCharge(0,3),5) dl(start(0,(tci,mbf),2),55) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,mbf),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(55,0,2) ch_time(0,2,11) cost(110,0,2)
+Optimization: -400 165
+Answer: 6
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),50) dl(afterCharge(0,3),0) dl(start(0,(tci,mbf),2),50) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,mbf),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(50,0,2) ch_time(0,2,10) cost(100,0,2)
+Optimization: -400 150
+Answer: 7
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),0) dl(afterCharge(0,1),0) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),55) dl(start(0,(tci,tci),0),0) dl(start(0,(tci,tci),1),0) as(0,(tci,tci),0) as(0,(tci,tci),1) as(0,(tci,lbm),2) ch_time(0,0,0) ch_time(0,1,0) cost(0,0,0) cost(0,0,1) cost(55,0,2) ch_time(0,2,11) cost(110,0,2)
+Optimization: -440 165
+Answer: 8
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),10) dl(beforeCharge(0,2),35) dl(beforeCharge(0,3),20) dl(afterCharge(0,0),50) dl(afterCharge(0,1),45) dl(afterCharge(0,2),45) dl(afterCharge(0,3),20) dl(start(0,(mbf,mgt),2),145) dl(start(0,(tci,crj),0),50) dl(start(0,(crj,mbf),1),125) as(0,(tci,crj),0) as(0,(crj,mbf),1) as(0,(mbf,mgt),2) cost(50,0,0) cost(100,0,0) ch_time(0,0,10) cost(35,0,1) ch_time(0,1,7) cost(70,0,1) cost(10,0,2) ch_time(0,2,2) cost(20,0,2)
+Optimization: -500 285
+Answer: 9
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),5) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),10) dl(afterCharge(0,0),45) dl(afterCharge(0,1),15) dl(afterCharge(0,2),35) dl(afterCharge(0,3),10) dl(start(0,(mbf,mgt),2),135) dl(start(0,(tci,crj),0),45) dl(start(0,(crj,mbf),1),95) as(0,(tci,crj),0) as(0,(crj,mbf),1) as(0,(mbf,mgt),2) cost(90,0,0) ch_time(0,0,9) cost(45,0,0) cost(10,0,1) ch_time(0,1,2) cost(20,0,1) cost(30,0,2) ch_time(0,2,6) cost(60,0,2)
+Optimization: -500 255
+Answer: 10
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),0) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),40) dl(afterCharge(0,1),10) dl(afterCharge(0,2),30) dl(afterCharge(0,3),5) dl(start(0,(mbf,mgt),2),130) dl(start(0,(tci,crj),0),40) dl(start(0,(crj,mbf),1),90) as(0,(tci,crj),0) as(0,(crj,mbf),1) as(0,(mbf,mgt),2) cost(40,0,0) cost(80,0,0) ch_time(0,0,8) cost(10,0,1) ch_time(0,1,2) cost(20,0,1) cost(30,0,2) ch_time(0,2,6) cost(60,0,2)
+Optimization: -500 240
+Answer: 11
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),15) dl(beforeCharge(0,2),20) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),30) dl(afterCharge(0,2),25) dl(afterCharge(0,3),0) dl(start(0,(mbf,mgt),2),125) dl(start(0,(tci,crj),0),55) dl(start(0,(crj,mbf),1),110) as(0,(tci,crj),0) as(0,(crj,mbf),1) as(0,(mbf,mgt),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(15,0,1) ch_time(0,1,3) cost(30,0,1) cost(5,0,2) ch_time(0,2,1) cost(10,0,2)
+Optimization: -500 225
+Answer: 12
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),5) dl(beforeCharge(0,2),20) dl(beforeCharge(0,3),15) dl(afterCharge(0,0),45) dl(afterCharge(0,1),60) dl(afterCharge(0,2),40) dl(afterCharge(0,3),15) dl(start(0,(tci,mgt),2),200) dl(start(0,(tci,crj),0),45) dl(start(0,(crj,tci),1),140) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,mgt),2) cost(90,0,0) ch_time(0,0,9) cost(45,0,0) cost(55,0,1) ch_time(0,1,11) cost(110,0,1) cost(20,0,2) ch_time(0,2,4) cost(40,0,2)
+Optimization: -600 360
+Answer: 13
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),5) dl(beforeCharge(0,2),10) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),45) dl(afterCharge(0,1),50) dl(afterCharge(0,2),30) dl(afterCharge(0,3),5) dl(start(0,(tci,mgt),2),190) dl(start(0,(tci,crj),0),45) dl(start(0,(crj,tci),1),130) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,mgt),2) cost(90,0,0) ch_time(0,0,9) cost(45,0,0) cost(45,0,1) ch_time(0,1,9) cost(90,0,1) cost(20,0,2) ch_time(0,2,4) cost(40,0,2)
+Optimization: -600 330
+Answer: 14
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),5) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),45) dl(afterCharge(0,1),45) dl(afterCharge(0,2),25) dl(afterCharge(0,3),0) dl(start(0,(tci,mgt),2),185) dl(start(0,(tci,crj),0),45) dl(start(0,(crj,tci),1),125) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,mgt),2) cost(90,0,0) ch_time(0,0,9) cost(45,0,0) cost(40,0,1) ch_time(0,1,8) cost(80,0,1) cost(20,0,2) ch_time(0,2,4) cost(40,0,2)
+Optimization: -600 315
+Answer: 15
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),10) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),8) dl(afterCharge(0,0),60) dl(afterCharge(0,1),30) dl(afterCharge(0,2),40) dl(afterCharge(0,3),8) dl(start(0,(mgt,lbm),2),190) dl(start(0,(tci,mbf),0),60) dl(start(0,(mbf,mgt),1),130) as(0,(tci,mbf),0) as(0,(mbf,mgt),1) as(0,(mgt,lbm),2) cost(60,0,0) cost(120,0,0) ch_time(0,0,12) cost(20,0,1) ch_time(0,1,4) cost(40,0,1) cost(35,0,2) ch_time(0,2,7) cost(70,0,2)
+Optimization: -730 345
+Answer: 16
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),10) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),3) dl(afterCharge(0,0),60) dl(afterCharge(0,1),30) dl(afterCharge(0,2),35) dl(afterCharge(0,3),3) dl(start(0,(mgt,lbm),2),185) dl(start(0,(tci,mbf),0),60) dl(start(0,(mbf,mgt),1),130) as(0,(tci,mbf),0) as(0,(mbf,mgt),1) as(0,(mgt,lbm),2) cost(60,0,0) cost(120,0,0) ch_time(0,0,12) cost(20,0,1) ch_time(0,1,4) cost(40,0,1) cost(30,0,2) ch_time(0,2,6) cost(60,0,2)
+Optimization: -730 330
+Answer: 17
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),15) dl(beforeCharge(0,2),20) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),215) dl(start(0,(tci,crj),0),55) dl(start(0,(crj,tci),1),140) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(45,0,1) ch_time(0,1,9) cost(90,0,1) cost(35,0,2) ch_time(0,2,7) cost(70,0,2)
+Optimization: -920 405
+Answer: 18
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),15) dl(beforeCharge(0,2),20) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),215) dl(start(0,(tci,crj),0),55) dl(start(0,(crj,tci),1),140) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(45,0,1) ch_time(0,1,9) cost(90,0,1) cost(35,0,2) ch_time(0,2,7) cost(70,0,2)
+Optimization: -1000 405
+Answer: 19
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),15) dl(beforeCharge(0,2),20) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),215) dl(start(0,(tci,crj),0),55) dl(start(0,(crj,tci),1),140) as(0,(tci,crj),0) as(0,(crj,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(45,0,1) ch_time(0,1,9) cost(90,0,1) cost(35,0,2) ch_time(0,2,7) cost(70,0,2)
+Optimization: -1080 405
+Answer: 20
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),10) dl(beforeCharge(0,2),10) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),60) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),255) dl(start(0,(tci,mbf),0),60) dl(start(0,(mbf,tci),1),160) as(0,(tci,mbf),0) as(0,(mbf,tci),1) as(0,(tci,lbm),2) cost(60,0,0) cost(120,0,0) ch_time(0,0,12) cost(50,0,1) ch_time(0,1,10) cost(100,0,1) cost(45,0,2) ch_time(0,2,9) cost(90,0,2)
+Optimization: -1130 465
+Answer: 21
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),5) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),60) dl(afterCharge(0,1),60) dl(afterCharge(0,2),45) dl(afterCharge(0,3),5) dl(start(0,(tci,crj),2),265) dl(start(0,(tci,lbm),0),60) dl(start(0,(lbm,tci),1),170) as(0,(tci,lbm),0) as(0,(lbm,tci),1) as(0,(tci,crj),2) cost(60,0,0) cost(120,0,0) ch_time(0,0,12) cost(55,0,1) ch_time(0,1,11) cost(110,0,1) cost(40,0,2) ch_time(0,2,8) cost(80,0,2)
+Optimization: -1200 465
+Answer: 22
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),40) dl(afterCharge(0,3),0) dl(start(0,(tci,crj),2),260) dl(start(0,(tci,lbm),0),55) dl(start(0,(lbm,tci),1),170) as(0,(tci,lbm),0) as(0,(lbm,tci),1) as(0,(tci,crj),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(35,0,2) ch_time(0,2,7) cost(70,0,2)
+Optimization: -1200 450
+Answer: 23
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),60) dl(afterCharge(0,3),5) dl(start(0,(tci,lbm),2),280) dl(start(0,(tci,lbm),0),55) dl(start(0,(lbm,tci),1),170) as(0,(tci,lbm),0) as(0,(lbm,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(55,0,2) ch_time(0,2,11) cost(110,0,2)
+Optimization: -1210 510
+Answer: 24
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),275) dl(start(0,(tci,lbm),0),55) dl(start(0,(lbm,tci),1),170) as(0,(tci,lbm),0) as(0,(lbm,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(50,0,2) ch_time(0,2,10) cost(100,0,2)
+Optimization: -1210 495
+Answer: 25
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),10) dl(beforeCharge(0,3),5) dl(afterCharge(0,0),50) dl(afterCharge(0,1),60) dl(afterCharge(0,2),60) dl(afterCharge(0,3),5) dl(start(0,(tci,lbm),2),260) dl(start(0,(tci,mbf),0),50) dl(start(0,(mbf,tci),1),160) as(0,(tci,mbf),0) as(0,(mbf,tci),1) as(0,(tci,lbm),2) cost(50,0,0) cost(100,0,0) ch_time(0,0,10) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(50,0,2) ch_time(0,2,10) cost(100,0,2)
+Optimization: -1240 480
+Answer: 26
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),10) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),50) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),255) dl(start(0,(tci,mbf),0),50) dl(start(0,(mbf,tci),1),160) as(0,(tci,mbf),0) as(0,(mbf,tci),1) as(0,(tci,lbm),2) cost(50,0,0) cost(100,0,0) ch_time(0,0,10) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(45,0,2) ch_time(0,2,9) cost(90,0,2)
+Optimization: -1240 465
+Answer: 27
+ch_time(0,3,0) dl(beforeCharge(0,0),0) dl(beforeCharge(0,1),0) dl(beforeCharge(0,2),5) dl(beforeCharge(0,3),0) dl(afterCharge(0,0),55) dl(afterCharge(0,1),60) dl(afterCharge(0,2),55) dl(afterCharge(0,3),0) dl(start(0,(tci,lbm),2),275) dl(start(0,(tci,lbm),0),55) dl(start(0,(lbm,tci),1),170) as(0,(tci,lbm),0) as(0,(lbm,tci),1) as(0,(tci,lbm),2) cost(110,0,0) ch_time(0,0,11) cost(55,0,0) cost(60,0,1) ch_time(0,1,12) cost(120,0,1) cost(50,0,2) ch_time(0,2,10) cost(100,0,2)
+Optimization: -1320 495
+OPTIMUM FOUND
+
+Models       : 27
+  Optimum    : yes
+Optimization : -1320 495
+Calls        : 1
+Time         : 0.295s (Solving: 0.08s 1st Model: 0.00s Unsat: 0.02s)
+CPU Time     : 0.281s
