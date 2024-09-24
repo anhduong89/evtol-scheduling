@@ -86,3 +86,4 @@ max_seg(D,max_seg):-agent(D).
 
 
 #show no_cust/3.
+#show cust/3.

@@ -14,6 +14,6 @@ dischg_rate(2, 4).
 capacity(0, 4).
 capacity(1, 4).
 capacity(2, 4).
-init_battery(0, 41).
-init_battery(1, 7).
-init_battery(2, 5).
+init_battery(0, 48).
+init_battery(1, 49).
+init_battery(2, 1).
