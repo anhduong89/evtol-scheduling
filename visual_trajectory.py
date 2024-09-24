@@ -9,14 +9,14 @@ import math
 import matplotlib.pyplot as plt
 import pyomo.environ as pyenv
 import json
-# Set the working directory
-os.chdir('/Users/duong/Work/NMSU/NASA_ULI_2022/my-code-no-public/evtol-scheduling/trip-noRQtime-formulation/v3-greedy-based')
+
+
 
 velocity = 100
 # Load the Excel file and read only the first 8 rows with the first row as the index
 MER_LMP = {
-    'MER': pd.read_excel('utils/MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
-    'LMP': pd.read_excel('utils/MER_LMP_Information.xlsx', sheet_name='LMP', nrows=7, index_col=0)
+    'MER': pd.read_excel('MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
+    'LMP': pd.read_excel('MER_LMP_Information.xlsx', sheet_name='LMP', nrows=7, index_col=0)
 }
 
 # Replace index row with ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
@@ -50,7 +50,7 @@ N_steps = int(np.floor(180/min_trav_time))
 # Create a DataFrame with the distance matrix
 dist = pd.DataFrame(dist, index=city_names, columns=city_names)
 # Read output_2352.txt
-with open('output/output_test.txt', 'r') as file:
+with open('input_answer_set.txt', 'r') as file:
     content = file.read()
 # Separate file content into a list of strings where separation is a blank space
 list_of_strings = content.split()
@@ -227,7 +227,7 @@ for agent_id, steps in nested_dict.items():
 # compute obj value
 # -- test 
 # pprint.pprint(nested_dict_1)
-with open('output/dict_check_asp.txt', 'w') as txt_file:
+with open('dict_check_asp.txt', 'w') as txt_file:
     original_stdout = sys.stdout  # Save a reference to the original standard output
     sys.stdout = txt_file  # Redirect standard output to the file
     try:
