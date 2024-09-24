@@ -11,7 +11,7 @@
 
 &diff {start(D,E,X,W) - start(D',E,Y,W')} > 0 :-  as_w(D,E,X,W), as_w(D',E,Y,W'), W>W'>0.
 
-&diff {arrival(D,E,X,W) - start(D,E,X,W)} = Ft :- as_w(D,E,X,W), flight_time(E, Ft).
+&diff {arrival(D,V',X) - start(D,(V,V'),X,W)} = Ft :- as_w(D,(V,V'),X,W), flight_time((V,V'),Ft).
 % &diff {start(D, (V, V'), X) - start_v(D, V, X)} = 0 :- as(D, (V, V'), X).
 
 % by segment X, arrival time at vertiport V' = start time at vertiport V + flight time
@@ -36,9 +36,11 @@ weight(0).
 % as_w(D, (V, V), X, 0) :- as(D, (V, V), X).
 1 {as_w(D,E,X,W):weight(W)} 1 :- as(D,E,X).
 
+
 % :- as_w(D,E,X,W), as_w(D,E,X,W'), W!=W'.
 % :- Count = #count{E,W: as_w(_,E,_,W)}, weight(W), W!=0, Count > 1.
 
+:- as_w(D,(V,V),X,W),W!=0.
 :- as_w(D,E,X,W), as_w(D',E,Y,W), W!=0, D=D', X!=Y.
 :- as_w(D,E,X,W), as_w(D',E,Y,W), W!=0, D!=D', X=Y.
 :- as_w(D,E,X,W), as_w(D',E,Y,W), W!=0, D!=D', X!=Y.

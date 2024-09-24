@@ -30,7 +30,7 @@
 % weight(1).
 % weight(3).
 %horizon in minutes
-horizon(70).
+horizon(71).
 
 % generate segment ground atoms unit.
 
@@ -46,8 +46,12 @@ max_seg(D,max_seg):-agent(D).
 
 %assign trip to segment: assigning trip (V, V1) if edge(V, V1) has passengers then it's the shortest trip in the reach of agent D at time step X
 
-% 1 {as(D, (V, V1), X+1); as(D, (V, V), X+1)} 1:- seg(X+1), agent(D), max_number_of_seg(MX), X < MX, MS= #min {S:flight_time((V, V'), S), not no_passengers(D, (V, V'), X), S > 0}, as(D, (_, V), X), flight_time((V, V1), MS).
-1 {as(D,(V,V'),X+1):edge(V,V')} 1 :- seg(X+1),agent(D),X<M,max_seg(D,M).
+% 1 {as(D, (V, V1), X+1): distance((V, V1), S'), S' >= MS;as(D, (V, V), X+1)} 1:- seg(X+1), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V,V'),S), not no_cust(D,(V,V'),_), S>0}, as(D, (_, V),X).
+
+1 {as(D, (V, V1), X+1): distance((V, V1), S'), S' >= MS;as(D, (V, V), X+1)} 1:- seg(X+1), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V,V'),S), cust(D,(V,V'),X), S>0}, as(D, (_, V),X).
+
+% assign trip for initial segment
+1{as(D, (V, V'), 0): distance((V, V'), S'), S' >= Smin}1:- agent(D), init_loc(D, V) , Smin = #max {S: distance((V, V1), S), S > 0}.
 
 :- init_loc(D,V), as(D,(V',_),0), V!=V'.
 
@@ -57,28 +61,28 @@ max_seg(D,max_seg):-agent(D).
 :-as(D,(V,V1),X),as(D,(V,V2),X),V1!=V2.
 
 
-% #heuristic 1 {as(D, (V, V1), X+1): flight_time((V, V1), S'), S' <= MS} 1 : seg(X+1), agent(D), X < M, max_seg(D, M), MS= #min {S:flight_time((V, V'), S), not no_passengers(D, (V, V'), X), S > 0}, as(D, (_, V), X).
-#heuristic as(D,(V,V1),X+1) : flight_time((V,V1),MS), seg(X+1), agent(D),X<M, max_seg(D,M),MS=#max{S:flight_time((V,V'),S), not no_cust(D,(V,V'),X),S>0}, as(D,(_,V),X). [1,sign]
+% 1 {as(D, (V, V1), X+1): distance((V, V1), S'), S' >= MS} 1:- seg(X+1), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V, V'), S), not no_cust(D,(V, V'),X), S > 0}, as(D, (_, V), X).
 
-% assign trip for initial segment
-#heuristic as(D,(V,V'),0) : flight_time((V,V'),S'), S'<=Smin, agent(D), init_loc(D,V),Smin=#max{S:flight_time((V,V1),S), S>0}. [1,sign]
 
 #heuristic as(D,(V,V),X) : not as_w(D,_,X,_). [1,sign]
 
 #heuristic as_w(D,E,X,W) : as(D,E,X), not as_w(_,E,_,W), weight(W). [2, sign]
 
 % at time step X of agent D, system choose whether has demand passengers or not.
-% 1 {cust(D,(V,V'),X);no_cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
+0 {cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
 % 0 {no_cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
 
-% :- as_w(_,E,_,10), no_cust(_,E,_).
+:- no_cust(D,(V,V'),X), cust(D,(V,V'),Y), Y>=X.
+
+:- not as_w(_,E,_,10), no_cust(_,E,_).
 % term no_cust(E) if exist the 3rd flight on edge E
 &diff{no_cust(E) - start(D',E,Y,10)} = 1 :- as_w(D',E,Y,10).
 
-as_w(D',E,Y,10)
-% generate atom no_cust if there is no custom for agent D at edge (V, V') during segment X
-no_cust(D,(V, V'),X):- &diff{no_cust((V,V')) - arrival(D,V,X)} > 0, as(D,(_,V), X-1), as_w(D',(V,V'),_,10).
 
-% &diff {arrival_v(D, V', X) - start_v(D, V, X)} = Ft :- flight_time((V, V'), S), Ft = (S*60)/speed, as(D, (V, V'), X).
-% :- Wx = #sum{W, D: as_w(D, E, Y, W), Y < X}, as(D', E, X), request(_, E, Wr), Wx < Wr, no_passengers(D, E, X). 
+1 {no_cust(D,(V,V'),X):seg(X), as(D',(_,V),X)} 1:- as_w(D',(V, V'),Y,10), agent(D).
 
+&diff{arrival(D,V,Y) - no_cust(V,V')} > 0 :- no_cust(D,(V,V'),X), as(D,(_,V),Y), Y >= X.
+
+
+
+#show no_cust/3.

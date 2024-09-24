@@ -2,7 +2,7 @@
 #!/bin/bash
 # default setting
 DEMAND=10
-MAX_SEGMENT=7
+MAX_SEGMENT=3
 TIME=1800
 AGENT=3
 # Parse arguments
