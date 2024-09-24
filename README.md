@@ -9,4 +9,4 @@ To run with encoding v3.2:
 `cd trip-noRQtime-formulation/v3-greedy-based/encoding_v3.2`
 
 2. Run the solver
-`bash /solver_NY.sh`
+`bash solver_NY.sh`
