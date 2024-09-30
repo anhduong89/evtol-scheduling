@@ -3,6 +3,12 @@ import random
 import os
 weight = int(sys.argv[1])
 
+# Get the absolute path of the current Python file
+current_file_path = os.path.abspath(__file__)
+
+# Get the directory name of the current Python file
+root = os.path.dirname(os.path.dirname(current_file_path))
+
 vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
 request_p = [[j, i] for i in range(0, 7) for j in range(0, 7) if i != j]
 
@@ -15,7 +21,7 @@ for i in range(0, total_edge):
     destination = request_p[i][1]
     request_print += [[no, (origin, destination), weight]]
 
-f = open('rq.lp',"w+")
+f = open(f'{root}/rq.lp',"w+")
 f.write('%request(ID, (edge), number of request passenger)\n')
 for i in request_print:
     f.write('request' + str(tuple(i)).replace("'","") + '.\n')

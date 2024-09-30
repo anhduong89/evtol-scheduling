@@ -1,19 +1,31 @@
-agent(0..2).
+agent(0..4).
 init_loc(0, jfk).
 init_loc(1, lga).
 init_loc(2, teb).
+init_loc(3, ryend).
+init_loc(4, cri).
 emax(0, 100).
 emax(1, 100).
 emax(2, 100).
+emax(3, 100).
+emax(4, 100).
 emin(0, 0).
 emin(1, 0).
 emin(2, 0).
+emin(3, 0).
+emin(4, 0).
 dischg_rate(0, 4).
 dischg_rate(1, 4).
 dischg_rate(2, 4).
+dischg_rate(3, 4).
+dischg_rate(4, 4).
 capacity(0, 4).
 capacity(1, 4).
 capacity(2, 4).
-init_battery(0, 48).
-init_battery(1, 49).
-init_battery(2, 1).
+capacity(3, 4).
+capacity(4, 4).
+init_battery(0, 25).
+init_battery(1, 46).
+init_battery(2, 30).
+init_battery(3, 41).
+init_battery(4, 40).

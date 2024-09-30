@@ -48,7 +48,7 @@ max_seg(D,max_seg):-agent(D).
 
 % 1 {as(D, (V, V1), X+1): distance((V, V1), S'), S' >= MS;as(D, (V, V), X+1)} 1:- seg(X+1), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V,V'),S), not no_cust(D,(V,V'),_), S>0}, as(D, (_, V),X).
 
-1 {as(D, (V, V1), X+1): distance((V, V1), S'), S' >= MS;as(D, (V, V), X+1)} 1:- seg(X+1), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V,V'),S), cust(D,(V,V'),X), S>0}, as(D, (_, V),X).
+1 {as(D, (V, V1), X): distance((V,V1),S'), S' >= MS;as(D,(V,V), X):edge(V,V)} 1:- seg(X), agent(D), X < M, max_seg(D, M), MS= #max {S:distance((V,V'),S), no_cust(D,(V,V'),Y), seg(Y), Y >= X,S>0}.
 
 % assign trip for initial segment
 1{as(D, (V, V'), 0): distance((V, V'), S'), S' >= Smin}1:- agent(D), init_loc(D, V) , Smin = #max {S: distance((V, V1), S), S > 0}.
@@ -66,22 +66,24 @@ max_seg(D,max_seg):-agent(D).
 
 #heuristic as(D,(V,V),X) : not as_w(D,_,X,_). [1,sign]
 
-#heuristic as_w(D,E,X,W) : as(D,E,X), not as_w(_,E,_,W), weight(W). [2, sign]
+#heuristic as_w(D,E,X,W) : as(D,E,X), not as_w(_,E,_,W), weight(W). [1, sign]
 
 % at time step X of agent D, system choose whether has demand passengers or not.
-0 {cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
+%% can we use only one atom no_cust
+% 0 {cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
 % 0 {no_cust(D,(V,V'),X)} 1 :- agent(D), seg(X), edge(V,V').
 
-:- no_cust(D,(V,V'),X), cust(D,(V,V'),Y), Y>=X.
+% :- no_cust(D,(V,V'),X), cust(D,(V,V'),Y), Y>=X.
 
-:- not as_w(_,E,_,10), no_cust(_,E,_).
+% :- not as_w(_,E,_,10), no_cust(_,E,_).
 % term no_cust(E) if exist the 3rd flight on edge E
-&diff{no_cust(E) - start(D',E,Y,10)} = 1 :- as_w(D',E,Y,10).
+
+
 
 
 1 {no_cust(D,(V,V'),X):seg(X), as(D',(_,V),X)} 1:- as_w(D',(V, V'),Y,10), agent(D).
 
-&diff{arrival(D,V,Y) - no_cust(V,V')} > 0 :- no_cust(D,(V,V'),X), as(D,(_,V),Y), Y >= X.
+% &diff{arrival(D,V,Y) - no_cust(V,V')} > 0 :- no_cust(D,(V,V'),X), as(D,(_,V),Y), Y >= X.
 
 
 
