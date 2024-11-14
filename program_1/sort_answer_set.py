@@ -12,7 +12,7 @@ import json
 import pprint
 # Set the working directory
 
-os.chdir('/Users/duong/Dropbox/NMSU/NASA_ULI_2022/git-public/evtol-scheduling-rqtime/program_1')
+# os.chdir('/Users/duong/Dropbox/NMSU/NASA_ULI_2022/git-public/evtol-scheduling-rqtime/program_1')
 
 def sort_answer_set(*answer_set):
     velocity = 100

@@ -13,7 +13,6 @@ parser.add_argument('--horizon', type=int, default = 180, help='Horizon')
 parser.add_argument('--time_limit', type=int, default = 300, help='Time limit')
 args = parser.parse_args()
 
-args.max_segment = 11
 if args.n_agents is not None:
     gen_init = ["python"
                 ,"instances/gen_init_NY.py"
