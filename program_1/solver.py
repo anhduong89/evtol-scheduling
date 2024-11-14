@@ -18,11 +18,13 @@ if args.n_agents is not None:
                 ,"instances/gen_init_NY.py"
                 , str(args.n_agents)
                 ]
+    subprocess.run(gen_init)  # Run gen_init script
 if args.n_rq is not None:
     gen_rq = ["python"
             , "instances/gen_rq_NY.py"
             , str(args.n_rq)
             ]
+    subprocess.run(gen_rq)  # Run gen_rq script
 
 clingo_schedule = ["clingo-dl"
                    , "schedule.lp"
@@ -55,16 +57,6 @@ result = subprocess.CompletedProcess(
     stdout=''.join(result_stdout),
     stderr=''.join(result_stderr)
 )
-# run_time = None
-# optimization = None
-# for line in result.stdout.splitlines():
-#     if line.startswith("Time         :"):
-#         run_time = float(line.split("Time         :")[1].strip().split('s')[0])
-#     if line.startswith("Optimization :"):
-#         optimization = int(line.split("Optimization :")[1].strip())
 
 total_revenue, total_em_cost, total_chg_cost, profit = sort_answer_set(result.stdout)
-# print("--- instances information ----\n")
-# print(f'Max possible revenue: {args.agents}')
-# print({'revenue':total_revenue, 'em_cost':total_em_cost, 'charge_cost': total_chg_cost,'profit': profit, 'TIME': run_time, 'optimization': optimization})
 

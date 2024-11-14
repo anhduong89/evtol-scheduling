@@ -1,4 +1,4 @@
-%request(ID, (edge), number of request passenger)
+%[[0, 2, 9, 9, 9, 9, 10], [0, 0, 9, 6, 10, 8, 1], [10, 3, 0, 10, 4, 9, 9], [8, 6, 2, 0, 9, 9, 8], [1, 3, 5, 1, 0, 7, 1], [1, 6, 6, 4, 1, 0, 7], [6, 2, 6, 0, 1, 4, 0]]%request(ID, (edge), number of request passenger)
 request(0, (lga, jfk), 10).
 request(1, (teb, jfk), 10).
 request(2, (ryend, jfk), 10).

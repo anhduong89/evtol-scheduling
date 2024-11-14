@@ -1,18 +1,15 @@
 import sys
 import random
 import os
-if len(sys.argv) == 2:
-    cust = int(sys.argv[1])
-    random_flag = int(sys.argv[2])
-    out_filename = 'rq.lp'
-elif len(sys.argv) == 1:
-    cust = int(sys.argv[1])
-    random_flag = 0
-    out_filename = 'rq.lp'
-else:
-    cust = 30
-    random_flag = 0
-    out_filename = 'rq_rand30.lp'
+# if len(sys.argv) == 2:
+#     cust = int(sys.argv[1])
+#     random_flag = int(sys.argv[2])
+#     out_filename = 'rq.lp'
+
+cust = int(sys.argv[1])
+random_flag = 0
+out_filename = 'rq.lp'
+
 
 
 vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
