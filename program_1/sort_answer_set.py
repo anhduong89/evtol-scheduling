@@ -4,7 +4,7 @@ import numpy as np
 import re
 from collections import defaultdict
 import sys
-# import os
+import os
 import math
 # import matplotlib.pyplot as plt
 # import pyomo.environ as pyenv
@@ -12,14 +12,14 @@ import json
 import pprint
 # Set the working directory
 
-# os.chdir('/home/duong/Dropbox/NMSU/NASA_ULI_2022/my-code-no-public/evtol-scheduling/trip-noRQtime-formulation/v3-greedy-based')
+os.chdir('/Users/duong/Dropbox/NMSU/NASA_ULI_2022/git-public/evtol-scheduling-rqtime/program_1')
 
-def sort_answer_set():
+def sort_answer_set(*answer_set):
     velocity = 100
     # Load the Excel file and read only the first 8 rows with the first row as the index
     MER_LMP = {
-        'MER': pd.read_excel(fr'utils/MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
-        'LMP': pd.read_excel(fr'utils/MER_LMP_Information.xlsx', sheet_name='LMP', nrows=7, index_col=0)
+        'MER': pd.read_excel(fr'MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
+        'LMP': pd.read_excel(fr'MER_LMP_Information.xlsx', sheet_name='LMP', nrows=7, index_col=0)
     }
 
     # Replace index row with ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
@@ -54,8 +54,9 @@ def sort_answer_set():
     # Create a DataFrame with the distance matrix
     dist = pd.DataFrame(dist, index=city_names, columns=city_names)
     # Read output_2352.txt
-    with open(fr'solver_to_answer_set.txt', 'r') as file:
-        content = file.read()
+    # with open(fr'solver_to_answer_set.txt', 'r') as file:
+    #     content = file.read()
+    content = str(answer_set)
     # Separate file content into a list of strings where separation is a blank space
     list_of_strings = content.split()
 
@@ -114,6 +115,7 @@ def sort_answer_set():
                 agent_id, vertiport_departure, vertiport_arrival, weight, step_id = match.groups()
                 dict_check_asp[int(agent_id)][int(step_id)]['revenue'] = int(weight) * dist.loc[vertiport_departure, vertiport_arrival] * 0.5
                 step_id = int(step_id)
+                dict_check_asp[int(agent_id)][int(step_id)]['weight'] = int(weight)
                 # nested_dict[agent_id][step_id-1]['as'] = s
                 nested_dict[agent_id][step_id-1]['VERTIPORT'] = vertiport_departure
                 nested_dict[agent_id][step_id-1]['DISTANCE'] = dist[vertiport_departure][ vertiport_arrival]
@@ -147,6 +149,8 @@ def sort_answer_set():
         return mer_values, lmp_values, col_out
 
 
+    stationed_route_count = 0  # Initialize counter
+    empty_flight_count = 0
     # Loop through the nested dictionary to recalculate the timing
     for agent_id in range(0, len(dict_check_asp)):
         path = dict_check_asp[agent_id]
@@ -177,6 +181,10 @@ def sort_answer_set():
                 arrival_time = data['departure_time'] + data['flight_time']
                 dict_check_asp[agent_id][step_id+1]['previous_arrival_time'] = arrival_time
 
+            if 'destination' in data and 'charge_at_vertiport' in data and data['destination'] == data['charge_at_vertiport']:
+                stationed_route_count += 1  # Increment counter if both keys are present
+            if 'destination' in data and 'charge_at_vertiport' in data and data['destination'] != data['charge_at_vertiport'] and data['weight'] == 0:
+                empty_flight_count += 1
     # Loop through the nested dictionary to add MER and LMP lists
     for agent_id, steps in dict_check_asp.items():
         for step_id, data in steps.items():
@@ -254,24 +262,24 @@ def sort_answer_set():
     #     finally:
     #         sys.stdout = original_stdout  # Reset standard output to its original value
 
-    with open(fr'answer_set_sorted.txt', 'w') as txt_file:
-        original_stdout = sys.stdout  # Save a reference to the original standard output
-        sys.stdout = txt_file  # Redirect standard output to the file
-        try:
-            try:
-                print(f'revenue={total_revenue}')
-                print(f'profit={total_revenue - total_em_cost - total_chg_cost}')     
-                print(f'em_cost={total_em_cost}')
-                print(f'chg_cost={total_chg_cost}')
+    # with open(fr'answer_set_sorted.txt', 'w') as txt_file:
+    #     original_stdout = sys.stdout  # Save a reference to the original standard output
+    #     sys.stdout = txt_file  # Redirect standard output to the file
+    #     try:
+    #         try:
+    #             print(f'revenue={total_revenue}')
+    #             print(f'profit={total_revenue - total_em_cost - total_chg_cost}')     
+    #             print(f'em_cost={total_em_cost}')
+    #             print(f'chg_cost={total_chg_cost}')
 
-                pprint.pprint(sort_asp)
+    #             pprint.pprint(sort_asp)
 
-            except Exception as e:
-                print(f"An error occurred: {e}")
-        finally:
-            sys.stdout = original_stdout  # Reset standard output to its original value
+    #         except Exception as e:
+    #             print(f"An error occurred: {e}")
+    #     finally:
+    #         sys.stdout = original_stdout  # Reset standard output to its original value
 
-    with open(fr'answer_set_sorted_detail.txt', 'w') as txt_file:
+    with open(fr'results/result_answer_set_sorted_detail.txt', 'w') as txt_file:
         original_stdout = sys.stdout  # Save a reference to the original standard output
         sys.stdout = txt_file  # Redirect standard output to the file
         try:
@@ -288,8 +296,8 @@ def sort_answer_set():
             sys.stdout = original_stdout  # Reset standard output to its original value
             
 
-    answer_set = ""
-    with open(fr'sort_answer_set.lp', 'w') as txt_file:
+    answer_set_print = ""
+    with open(fr'results/result_answer_set_sorted.lp', 'w') as txt_file:
         original_stdout = sys.stdout  # Save a reference to the original standard output
         sys.stdout = txt_file  # Redirect standard output to the file
         try:
@@ -297,7 +305,7 @@ def sort_answer_set():
                 for agent, steps in dict(sorted(sort_asp.items())).items():
                     for step, route in steps.items():
                         print(route['route']+'.')
-                        answer_set += route['route']+'.\n'
+                        answer_set_print += route['route']+'.\n'
 
             except Exception as e:
                 print(f"An error occurred: {e}")
@@ -308,6 +316,8 @@ def sort_answer_set():
     print(f'profit={total_revenue - total_em_cost - total_chg_cost}')
     print(f'em_cost={total_em_cost}')
     print(f'chg_cost={total_chg_cost}')
+    print(f'Number of segments that agents stationed: {stationed_route_count}')
+    print(f'Number of flights that agents carry zero customer: {empty_flight_count}')
     return total_revenue, total_em_cost, total_chg_cost, total_revenue-total_em_cost -total_chg_cost
 
 if __name__ == "__main__":

@@ -1,0 +1,5 @@
+revenue=2150.0253033100003
+profit=2099.061609367026
+em_cost=25.298540707099033
+chg_cost=25.665153235875064
+An error occurred: name 'route_count' is not defined

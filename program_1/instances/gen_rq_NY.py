@@ -32,7 +32,7 @@ for i in range(0, total_edge):
         cust_rand = matrix_out[vPort_id.index(origin)][vPort_id.index(destination)]
         request_print += [[no, (origin, destination), cust_rand]]
 
-f = open(f'rq.lp',"w+")
+f = open(f'instances/rq.lp',"w+")
 f.write(f'%{matrix_out}')
 f.write('%request(ID, (edge), number of request passenger)\n')
 for i in request_print:
