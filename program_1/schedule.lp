@@ -54,9 +54,15 @@ seg(1..max_seg).
 % remain_cust(E,N-P) :- request(_,E,N), P=#sum{W,D,X: as(D,E,W,X)}, N!=P.
 % :~ remain_cust(E,P). [P@1, E]
 
-remain_cust(E,N,0) :- request(_,E,N).
-remain_cust(E,N-P,X) :- remain_cust(E,N,X-1), P=#sum{W,D: as(D,E,W,X)}, seg(X).
-:~ remain_cust(E,P,max_seg), P>0. [P@1, E]
+% remain_cust(E,N,0) :- request(_,E,N).
+% remain_cust(E,N-P,X) :- remain_cust(E,N,X-1), P=#sum{W,D: as(D,E,W,X)}, seg(X).
+% :~ remain_cust(E,P,max_seg), P>0. [P@1, E]
+
+% total_served(P) :- P=#sum{W,D,E,X: as(D,E,W,X)}.
+
+% :~ total_served(P). [-P]
+
+:~ as(_,_,W,_), W>0. [-W@3]
 
 % ------ optimization_2: penalize empty flights.
 
@@ -65,8 +71,10 @@ remain_cust(E,N-P,X) :- remain_cust(E,N,X-1), P=#sum{W,D: as(D,E,W,X)}, seg(X).
 
 % ------ optimization_2.1: penalize empty flights and not stationed. (could has better solution)
 
-% penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
-% :~ penalty(D, _, S, P). [P, D, S]
+penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
+:~ penalty(D, _, S, P). [P, D, S]
+
+:- as(D,E,W,_), as(D',E,W',_), W>0, W'>0, D!=D', W+W'<4.
 
 % % ------ optimization_4: Maximize profit
 
@@ -78,4 +86,4 @@ remain_cust(E,N-P,X) :- remain_cust(E,N,X-1), P=#sum{W,D: as(D,E,W,X)}, seg(X).
 % #show as/4.
 #show.
 % #show remain_cust(E,P,X): remain_cust(E,P,X), X=max_seg.
-#show remain_cust/3.
+#show as/4.
