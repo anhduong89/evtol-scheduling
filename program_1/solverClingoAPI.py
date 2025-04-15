@@ -66,6 +66,7 @@ class Schedule:
         self.control_par =  ['-c', f'start_seg={self.start_segment}'
                             , '-c', f'max_seg={self.max_segment}'
                             , '-c', f'horizon={self.horizon}'
+                            , '-t2'
                             ]
         self.choose_heu = choose_heu
         self.choose_opt = choose_opt
@@ -194,7 +195,7 @@ def GetNumberOfAgentsEachVertiport(dl_assignments):
 # processing model resulting from solver
 
 def CentralSchedule():
-    schedule = Schedule()
+    schedule = Schedule(choose_opt=[1,2])
     models = schedule.Solving()
     best_model = GetBestModelProfit(models)
     return best_model
@@ -226,7 +227,7 @@ def DecoupledSchedule():
     return models[-1]
     
 def VertiportConstraintSchedule():
-    schedule= Schedule(encoding='schedule_vertiport_constraint.lp', max_segment=5, n_agents=13)
+    schedule= Schedule(encoding='schedule_vertiport_constraint.lp', max_segment=7, n_agents=10)
     models = schedule.Solving()
     best_model = GetBestModelProfit(models)
     return best_model
@@ -298,6 +299,6 @@ class IncrementalSchedule(Schedule):
 
 
 if __name__ == "__main__":
-    model = VertiportConstraintSchedule()
+    model = CentralSchedule()
     with open("results/trajectories.lp", "w") as file:
         file.write(model.to_visualized)

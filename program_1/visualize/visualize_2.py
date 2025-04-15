@@ -248,7 +248,7 @@ def visualize():
     
     nx.draw_networkx_nodes(G, pos, node_size=1, node_color='lightblue')
     labels = {node: G.nodes[node]['label'] for node in G.nodes()}
-    nx.draw_networkx_labels(G, pos, labels=labels, font_size=9, font_weight='bold', verticalalignment='bottom')
+    nx.draw_networkx_labels(G, pos, labels=labels, font_size=13, font_weight='bold', verticalalignment='bottom')
 
     plt.title("Sequential Flight Segments for All Agents")
     plt.axis('off')
