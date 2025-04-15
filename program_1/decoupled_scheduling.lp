@@ -1,11 +1,10 @@
 % ------ INSTANCES
 #include "instances/network_NY.lp".
-#include "instances/init.lp".
+#include "instances/init_decoupled.lp".
 #include "instances/rq.lp".
 
-max_seg(D,max_seg):-agent(D).
-
 % ------ GENERATE ROUTING
+max_seg(D,max_seg):-agent(D).
 
 % -- assign edge to each segment
 1 {as(D,E,0..C,X):edge(E)} 1 :- agent(D), capacity(D,C), X=start_seg..max_seg.
@@ -24,16 +23,15 @@ max_seg(D,max_seg):-agent(D).
 % consecutive trips need to be connected
 :-as(D,(V,V1),_,X),as(D,(V2,V3),_,X+1),V1!=V2.
 
-
 % -- HEURISTIC
 % independent scheduling
 % #heuristic as(D,E,W,X):distance(E,S). [D*100 + W*S*(max_seg-X+1)/10,true]
 
 % Prioritize scheduling higher-revenue flight
-% #heuristic as(_,E,W,X):distance(E,S). [W*S,true]
+% #heuristic as(D,E,W,X):distance(E,S), agent(D). [W*S,true]
 
 % Prioritize scheduling higher-revenue flights earlier in the trajectory
-#heuristic as(_,E,W,X):distance(E,S). [W*S*(max_seg-X+1),true]
+% #heuristic as(_,E,W,X):distance(E,S). [W*S*(max_seg-X+1),true]
 
 
 
@@ -42,6 +40,7 @@ max_seg(D,max_seg):-agent(D).
 % ----- TIME SCHEDULE WITH DIFFERENT CONSTRAINT
 % start time at initial vertiport = charge duration
 &diff {start(D,E,1)} = 0 :- as(D,E,_,1).
+
 
 &diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
 
@@ -56,18 +55,18 @@ max_seg(D,max_seg):-agent(D).
 
 % ------ optimization_2: penalize empty flights.
 
-penalty(D, E, S, 1) :- as(D, E, 0, S).
-:~ penalty(D, _, S, P). [P, D, S]
+% penalty(D, E, S, 1) :- as(D, E, 0, S).
+% :~ penalty(D, _, S, P). [P, D, S]
 
 % ------ optimization_2.1: penalize empty flights and not stationed. (could has better solution)
 
 % penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
-% :~ penalty(D, _, S, P). [P, D, S]
+% :~ penalty(D, _, S, P). [P@0, D, S]
 
-% % ------ optimization_4: Maximize profit
+% % ------ optimization_3: Maximize revenue
 
 % revenue(D, S, W*S) :- as(D, E, W, S), distance(E,S).
-% :~ revenue(D, S, V). [-V, D, S]
+% :~ revenue(D, S, V). [-V@1, D, S]
 %  ----------------------------
 
 % display

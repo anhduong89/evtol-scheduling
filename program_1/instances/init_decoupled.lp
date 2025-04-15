@@ -1,4 +1,3 @@
-agent(0..12).
 init_loc(0, lga).
 init_loc(1, cri).
 init_loc(2, dandy).

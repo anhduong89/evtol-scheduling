@@ -1,4 +1,4 @@
-% vertiport(jfk;lga;teb;ryend;cri;cimbl;dandy).
+vertiport(jfk;lga;teb;ryend;cri;cimbl;dandy).
 % distance= miles/10
 distance((jfk, jfk), 0).
 distance((jfk, lga), 10).
@@ -196,3 +196,5 @@ edge((dandy,ryend)).
 edge((dandy,cri)).
 edge((dandy,cimbl)).
 edge((dandy,dandy)).
+
+edge_loop((V,V)) :- edge((V,V)).

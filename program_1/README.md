@@ -1,5 +1,5 @@
 # REQUIREMENT
-1. python 3.x (I'm running python 3.10)
+1. python 3.9 (only python3.9 work with clingodl API)
 2. numpy
 3. pandas
 4. clingo & clingo-dl
@@ -27,7 +27,7 @@ solve:
 
 
 **(2)**:
-`python solver.py --n_agents 15 --n_rq 20 --max_segment 10`
+` python solver.py --n_agents 10 --n_rq 10 --max_segment 10 `
 
 _Note:_
 

@@ -1,0 +1,1 @@
+clingo-dl schedule.lp test_0.lp opt_heu/opt_1.lp opt_heu/opt_2.1.lp --time-limit=30

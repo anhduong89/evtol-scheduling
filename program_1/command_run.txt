@@ -1,0 +1,1 @@
+clingo-dl schedule_vertiport_constraint.lp -c horizon=180 -c start_seg=1 -c max_seg=5 --heuristic=Domain

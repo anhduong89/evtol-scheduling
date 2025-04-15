@@ -14,7 +14,7 @@ import pprint
 
 # os.chdir('/Users/duong/Dropbox/NMSU/NASA_ULI_2022/git-public/evtol-scheduling-rqtime/program_1')
 
-def sort_answer_set(*answer_set):
+def CalProfit(*answer_set):
     velocity = 100
     # Load the Excel file and read only the first 8 rows with the first row as the index
     MER_LMP = {
@@ -56,9 +56,11 @@ def sort_answer_set(*answer_set):
     # Read output_2352.txt
     # with open(fr'solver_to_answer_set.txt', 'r') as file:
     #     content = file.read()
-    content = str(answer_set)
+
+    # Remove content until the first newline character, including the newline itself
+
     # Separate file content into a list of strings where separation is a blank space
-    list_of_strings = content.split()
+    list_of_strings = answer_set[0]
 
     # Get only strings that have the substring 'dl(start_v' or 'dl(arrival_v' or 'as_w'
     # filtered_strings = [s for s in list_of_strings if 'as' in s or 'dl(arrival_v' in s]
@@ -138,7 +140,7 @@ def sort_answer_set(*answer_set):
                 vertiport_start, vertiport_arrival, revenue, step_id = match.groups()
                 pot_revenue[int(step_id)][(vertiport_start, vertiport_arrival)]= revenue
 
-                
+
     # Function to get MER and LMP values for a given vertiport and time range
     def get_mer_lmp(vertiport, time_arrival, time_depart):
         col = math.floor(time_arrival/10)
@@ -156,7 +158,7 @@ def sort_answer_set(*answer_set):
         path = dict_check_asp[agent_id]
         for step_id in range(0, len(path)):
             data = path[step_id]
-            if step_id == 0:
+            if step_id == 1:
                 data['current_battery'] = 25
                 arrival_time = data['flight_time']
                 dict_check_asp[agent_id][step_id+1]['previous_arrival_time'] = arrival_time
@@ -320,6 +322,6 @@ def sort_answer_set(*answer_set):
     print(f'Number of flights that agents carry zero customer: {empty_flight_count}')
     return total_revenue, total_em_cost, total_chg_cost, total_revenue-total_em_cost -total_chg_cost
 
-if __name__ == "__main__":
-    sort_answer_set()
+
+    
 # %%

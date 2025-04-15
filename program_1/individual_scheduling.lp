@@ -3,12 +3,13 @@
 #include "instances/init.lp".
 #include "instances/rq.lp".
 
+% ------ GENERATE ROUTING
 max_seg(D,max_seg):-agent(D).
 
-% ------ GENERATE ROUTING
-
 % -- assign edge to each segment
-1 {as(D,E,0..C,X):edge(E)} 1 :- agent(D), capacity(D,C), X=start_seg..max_seg.
+1 {as(D,E,0..C,X):edge(E)} 1 :- agent(D), capacity(D,C), X=1..(max_seg), as(D-1,_,_,1..max_seg), D>0.
+
+1 {as(D,E,0..C,X):edge(E)} 1 :- agent(D), capacity(D,C), X=1..(max_seg), D=0.
 
 % total delivered customers can not excess demand
 :- (R+1) #sum{W,D,X:as(D,E,W,X)}, edge(E), request(_,E,R).
@@ -19,21 +20,20 @@ max_seg(D,max_seg):-agent(D).
 :- as(_,(V,V),W,_), W!=0.
 
 % start vertiport as specicfied
-:- init_loc(D,V), as(D,(V',_),_,1), V!=V'.
+:- init_loc(D,V), as(D,(V',_),_,0), V!=V'.
 
 % consecutive trips need to be connected
 :-as(D,(V,V1),_,X),as(D,(V2,V3),_,X+1),V1!=V2.
 
-
 % -- HEURISTIC
 % independent scheduling
-% #heuristic as(D,E,W,X):distance(E,S). [D*100 + W*S*(max_seg-X+1)/10,true]
+#heuristic as(D,E,W,X):distance(E,S). [D*100 + W*S*(max_seg-X+1)/10,true]
 
 % Prioritize scheduling higher-revenue flight
 % #heuristic as(_,E,W,X):distance(E,S). [W*S,true]
 
 % Prioritize scheduling higher-revenue flights earlier in the trajectory
-#heuristic as(_,E,W,X):distance(E,S). [W*S*(max_seg-X+1),true]
+% #heuristic as(_,E,W,X):distance(E,S). [W*S*(max_seg-X+1),true]
 
 
 
@@ -54,20 +54,12 @@ max_seg(D,max_seg):-agent(D).
 % remain_cust(E,N-P) :- request(_,E,N), P=#sum{W,D,X: as(D,E,W,X)}, N!=P.
 % :~ remain_cust(E,P). [P@1, E]
 
+
 % ------ optimization_2: penalize empty flights.
 
 penalty(D, E, S, 1) :- as(D, E, 0, S).
 :~ penalty(D, _, S, P). [P, D, S]
 
-% ------ optimization_2.1: penalize empty flights and not stationed. (could has better solution)
-
-% penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
-% :~ penalty(D, _, S, P). [P, D, S]
-
-% % ------ optimization_4: Maximize profit
-
-% revenue(D, S, W*S) :- as(D, E, W, S), distance(E,S).
-% :~ revenue(D, S, V). [-V, D, S]
 %  ----------------------------
 
 % display
