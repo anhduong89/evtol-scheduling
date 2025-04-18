@@ -14,37 +14,33 @@ seg(1..max_seg).
 % total delivered customers can not excess demand
 :- (R+1) #sum{W,D,X:as(D,E,W,X)}, edge(E), request(_,E,R).
 
+:- as(_,E,W,_), W > 0, edge_loop(E).
+
 % start vertiport as specicfied
 :- init_loc(D,V), as(D,(V',_),_,1), V!=V'.
 
 % consecutive trips need to be connected
 :-as(D,(V,V1),_,X),as(D,(V2,V3),_,X+1),V1!=V2.
 
-% 1 {as(D,(L,L'),0..C,X)} 1 :- 
-%     agent(D), capacity(D,C), seg(X), edge((L,L')), at(D, L, X), at(D, L', X+1), L !=L'.
+%%% :~ as(D,E,W,_), as(_,E,W',_), W>0, W'>0, capacity(D,C), W<C.   [(D,E,W)@1]
 
-:- as(D,E,W,_), as(_,E,W',_), W>0, W'>0, capacity(D,C), W<C.
+:~ as(D,E,W,X), as(_,E,W',X'), W>0, W'>0, X < X', capacity(D,C), W<C.   [(D,E,W,X)@1]
 
-% :- as(D,E,W,X), as(_,E,W',X'), W>0, W'>0, X'>X, capacity(D,C), W<C.
-
-% :~ as(_,_,W,_), W>0. [-W@3]
-
-:~ as(_,(L,L'),0,_), L != L'. [(L,L')@1]
-
-
-total_served(E, T) :- edge(E), T = #sum{W,D,X:as(D,E,W,X)}.
-
-:~ total_served(_, T). [-T@1]  
-
-% remain_cust(E,N,0) :- request(_,E,N).
-% remain_cust(E,N-P,X) :- remain_cust(E,N,X-1), P=#sum{W,D: as(D,E,W,X)}, seg(X).
-
-
+:~ as(_,E,0,_), not edge_loop(E). [1@1]
 
 % Prioritize scheduling higher-revenue flight
 #heuristic as(_,E,W,_):distance(E,S). [W*S,true]
 
+% ----- TIME SCHEDULE WITH DIFFERENT CONSTRAINT
+% start time at initial vertiport = charge duration
+
+% &diff {start(D,E,1)} = 0 :- as(D,E,_,1).
+
+% &diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
+
+% &diff {arrival(D,E,X) - start(D,E,X)} = FT :- flight_time(E,FT), as(D,E,_,X).
+
+% &diff {start(D,E',X+1) - arrival(D,E,X)} >= CT :- charge_time(E',CT), as(D,E,_,X), as(D,E',_,X+1).
+
 #show.
-% #show at/3.
 #show as/4.
-% #show remain_cust/3. 
