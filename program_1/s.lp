@@ -24,7 +24,7 @@ seg(1..max_seg).
 
 %%% :~ as(D,E,W,_), as(_,E,W',_), W>0, W'>0, capacity(D,C), W<C.   [(D,E,W)@1]
 
-:~ as(D,E,W,X), as(_,E,W',X'), W>0, W'>0, X < X', capacity(D,C), W<C.   [(D,E,W,X)@1]
+:~ as(D,E,W,X), as(_,E,W',X'), W>0, W'>0, X < X', capacity(D,C), W<C.   [1@1,D,E,W,X]
 
 :~ as(_,E,0,_), not edge_loop(E). [1@1]
 
