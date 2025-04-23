@@ -7,6 +7,8 @@ edge(E) :- as(_,E,_,_).
 total(T, E) :- edge(E), T = #sum{W,D,X : as(D,E,W,X)}. 
 wasted(F) :- F = #count{(L,L'),D,X : as(D,(L,L'), 0, X), L!=L'}. 
 
+flight_time_need(D, X) :- X = #sum{T, D, X : flight_time(D, E, T), assign(D, E, _, X)}.
+
 
 as(0,(lga,cimbl),4,1).
 as(1,(cri,lga),2,1).
