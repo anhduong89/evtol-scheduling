@@ -1,200 +1,200 @@
-vertiport(jfk;lga;teb;ryend;cri;cimbl;dandy).
+vertiport(lgr;jfk;rep;lima;dtm;ttb;nli).
 % distance= miles/10
+distance((lgr, lgr), 0).
+distance((lgr, jfk), 11).
+distance((lgr, rep), 24).
+distance((lgr, lima), 41).
+distance((lgr, dtm), 9).
+distance((lgr, ttb), 11).
+distance((lgr, nli), 17).
+distance((jfk, lgr), 11).
 distance((jfk, jfk), 0).
-distance((jfk, lga), 10).
-distance((jfk, teb), 19).
-distance((jfk, ryend), 19).
-distance((jfk, cri), 6).
-distance((jfk, cimbl), 13).
-distance((jfk, dandy), 20).
-distance((lga, jfk), 10).
-distance((lga, lga), 0).
-distance((lga, teb), 9).
-distance((lga, ryend), 15).
-distance((lga, cri), 11).
-distance((lga, cimbl), 7).
-distance((lga, dandy), 13).
-distance((teb, jfk), 19).
-distance((teb, lga), 9).
-distance((teb, teb), 0).
-distance((teb, ryend), 11).
-distance((teb, cri), 16).
-distance((teb, cimbl), 6).
-distance((teb, dandy), 6).
-distance((ryend, jfk), 19).
-distance((ryend, lga), 15).
-distance((ryend, teb), 11).
-distance((ryend, ryend), 0).
-distance((ryend, cri), 13).
-distance((ryend, cimbl), 9).
-distance((ryend, dandy), 6).
-distance((cri, jfk), 6).
-distance((cri, lga), 11).
-distance((cri, teb), 16).
-distance((cri, ryend), 13).
-distance((cri, cri), 0).
-distance((cri, cimbl), 10).
-distance((cri, dandy), 16).
-distance((cimbl, jfk), 13).
-distance((cimbl, lga), 7).
-distance((cimbl, teb), 6).
-distance((cimbl, ryend), 9).
-distance((cimbl, cri), 10).
-distance((cimbl, cimbl), 0).
-distance((cimbl, dandy), 7).
-distance((dandy, jfk), 20).
-distance((dandy, lga), 13).
-distance((dandy, teb), 6).
-distance((dandy, ryend), 6).
-distance((dandy, cri), 16).
-distance((dandy, cimbl), 7).
-distance((dandy, dandy), 0).
+distance((jfk, rep), 20).
+distance((jfk, lima), 37).
+distance((jfk, dtm), 13).
+distance((jfk, ttb), 21).
+distance((jfk, nli), 21).
+distance((rep, lgr), 24).
+distance((rep, jfk), 20).
+distance((rep, rep), 0).
+distance((rep, lima), 17).
+distance((rep, dtm), 31).
+distance((rep, ttb), 35).
+distance((rep, nli), 40).
+distance((lima, lgr), 41).
+distance((lima, jfk), 37).
+distance((lima, rep), 17).
+distance((lima, lima), 0).
+distance((lima, dtm), 48).
+distance((lima, ttb), 50).
+distance((lima, nli), 56).
+distance((dtm, lgr), 9).
+distance((dtm, jfk), 13).
+distance((dtm, rep), 31).
+distance((dtm, lima), 48).
+distance((dtm, dtm), 0).
+distance((dtm, ttb), 11).
+distance((dtm, nli), 8).
+distance((ttb, lgr), 11).
+distance((ttb, jfk), 21).
+distance((ttb, rep), 35).
+distance((ttb, lima), 50).
+distance((ttb, dtm), 11).
+distance((ttb, ttb), 0).
+distance((ttb, nli), 12).
+distance((nli, lgr), 17).
+distance((nli, jfk), 21).
+distance((nli, rep), 40).
+distance((nli, lima), 56).
+distance((nli, dtm), 8).
+distance((nli, ttb), 12).
+distance((nli, nli), 0).
+flight_time((lgr, lgr), 0).
+flight_time((lgr, jfk), 6).
+flight_time((lgr, rep), 15).
+flight_time((lgr, lima), 24).
+flight_time((lgr, dtm), 5).
+flight_time((lgr, ttb), 7).
+flight_time((lgr, nli), 10).
+flight_time((jfk, lgr), 6).
 flight_time((jfk, jfk), 0).
-flight_time((jfk, lga), 6).
-flight_time((jfk, teb), 11).
-flight_time((jfk, ryend), 11).
-flight_time((jfk, cri), 3).
-flight_time((jfk, cimbl), 8).
-flight_time((jfk, dandy), 12).
-flight_time((lga, jfk), 6).
-flight_time((lga, lga), 0).
-flight_time((lga, teb), 5).
-flight_time((lga, ryend), 9).
-flight_time((lga, cri), 6).
-flight_time((lga, cimbl), 4).
-flight_time((lga, dandy), 8).
-flight_time((teb, jfk), 11).
-flight_time((teb, lga), 5).
-flight_time((teb, teb), 0).
-flight_time((teb, ryend), 7).
-flight_time((teb, cri), 10).
-flight_time((teb, cimbl), 4).
-flight_time((teb, dandy), 4).
-flight_time((ryend, jfk), 11).
-flight_time((ryend, lga), 9).
-flight_time((ryend, teb), 7).
-flight_time((ryend, ryend), 0).
-flight_time((ryend, cri), 8).
-flight_time((ryend, cimbl), 5).
-flight_time((ryend, dandy), 4).
-flight_time((cri, jfk), 3).
-flight_time((cri, lga), 6).
-flight_time((cri, teb), 10).
-flight_time((cri, ryend), 8).
-flight_time((cri, cri), 0).
-flight_time((cri, cimbl), 6).
-flight_time((cri, dandy), 10).
-flight_time((cimbl, jfk), 8).
-flight_time((cimbl, lga), 4).
-flight_time((cimbl, teb), 4).
-flight_time((cimbl, ryend), 5).
-flight_time((cimbl, cri), 6).
-flight_time((cimbl, cimbl), 0).
-flight_time((cimbl, dandy), 4).
-flight_time((dandy, jfk), 12).
-flight_time((dandy, lga), 8).
-flight_time((dandy, teb), 4).
-flight_time((dandy, ryend), 4).
-flight_time((dandy, cri), 10).
-flight_time((dandy, cimbl), 4).
-flight_time((dandy, dandy), 0).
+flight_time((jfk, rep), 12).
+flight_time((jfk, lima), 22).
+flight_time((jfk, dtm), 8).
+flight_time((jfk, ttb), 12).
+flight_time((jfk, nli), 12).
+flight_time((rep, lgr), 15).
+flight_time((rep, jfk), 12).
+flight_time((rep, rep), 0).
+flight_time((rep, lima), 10).
+flight_time((rep, dtm), 19).
+flight_time((rep, ttb), 21).
+flight_time((rep, nli), 24).
+flight_time((lima, lgr), 24).
+flight_time((lima, jfk), 22).
+flight_time((lima, rep), 10).
+flight_time((lima, lima), 0).
+flight_time((lima, dtm), 29).
+flight_time((lima, ttb), 30).
+flight_time((lima, nli), 34).
+flight_time((dtm, lgr), 5).
+flight_time((dtm, jfk), 8).
+flight_time((dtm, rep), 19).
+flight_time((dtm, lima), 29).
+flight_time((dtm, dtm), 0).
+flight_time((dtm, ttb), 6).
+flight_time((dtm, nli), 5).
+flight_time((ttb, lgr), 7).
+flight_time((ttb, jfk), 12).
+flight_time((ttb, rep), 21).
+flight_time((ttb, lima), 30).
+flight_time((ttb, dtm), 6).
+flight_time((ttb, ttb), 0).
+flight_time((ttb, nli), 7).
+flight_time((nli, lgr), 10).
+flight_time((nli, jfk), 12).
+flight_time((nli, rep), 24).
+flight_time((nli, lima), 34).
+flight_time((nli, dtm), 5).
+flight_time((nli, ttb), 7).
+flight_time((nli, nli), 0).
+charge_time((lgr, lgr), 0).
+charge_time((lgr, jfk), 10).
+charge_time((lgr, rep), 23).
+charge_time((lgr, lima), 39).
+charge_time((lgr, dtm), 9).
+charge_time((lgr, ttb), 11).
+charge_time((lgr, nli), 16).
+charge_time((jfk, lgr), 10).
 charge_time((jfk, jfk), 0).
-charge_time((jfk, lga), 10).
-charge_time((jfk, teb), 18).
-charge_time((jfk, ryend), 18).
-charge_time((jfk, cri), 6).
-charge_time((jfk, cimbl), 13).
-charge_time((jfk, dandy), 19).
-charge_time((lga, jfk), 10).
-charge_time((lga, lga), 0).
-charge_time((lga, teb), 9).
-charge_time((lga, ryend), 14).
-charge_time((lga, cri), 10).
-charge_time((lga, cimbl), 6).
-charge_time((lga, dandy), 13).
-charge_time((teb, jfk), 18).
-charge_time((teb, lga), 9).
-charge_time((teb, teb), 0).
-charge_time((teb, ryend), 11).
-charge_time((teb, cri), 15).
-charge_time((teb, cimbl), 6).
-charge_time((teb, dandy), 6).
-charge_time((ryend, jfk), 18).
-charge_time((ryend, lga), 14).
-charge_time((ryend, teb), 11).
-charge_time((ryend, ryend), 0).
-charge_time((ryend, cri), 13).
-charge_time((ryend, cimbl), 8).
-charge_time((ryend, dandy), 6).
-charge_time((cri, jfk), 6).
-charge_time((cri, lga), 10).
-charge_time((cri, teb), 15).
-charge_time((cri, ryend), 13).
-charge_time((cri, cri), 0).
-charge_time((cri, cimbl), 9).
-charge_time((cri, dandy), 15).
-charge_time((cimbl, jfk), 13).
-charge_time((cimbl, lga), 6).
-charge_time((cimbl, teb), 6).
-charge_time((cimbl, ryend), 8).
-charge_time((cimbl, cri), 9).
-charge_time((cimbl, cimbl), 0).
-charge_time((cimbl, dandy), 7).
-charge_time((dandy, jfk), 19).
-charge_time((dandy, lga), 13).
-charge_time((dandy, teb), 6).
-charge_time((dandy, ryend), 6).
-charge_time((dandy, cri), 15).
-charge_time((dandy, cimbl), 7).
-charge_time((dandy, dandy), 0).
+charge_time((jfk, rep), 19).
+charge_time((jfk, lima), 36).
+charge_time((jfk, dtm), 12).
+charge_time((jfk, ttb), 20).
+charge_time((jfk, nli), 20).
+charge_time((rep, lgr), 23).
+charge_time((rep, jfk), 19).
+charge_time((rep, rep), 0).
+charge_time((rep, lima), 16).
+charge_time((rep, dtm), 30).
+charge_time((rep, ttb), 34).
+charge_time((rep, nli), 38).
+charge_time((lima, lgr), 39).
+charge_time((lima, jfk), 36).
+charge_time((lima, rep), 16).
+charge_time((lima, lima), 0).
+charge_time((lima, dtm), 46).
+charge_time((lima, ttb), 48).
+charge_time((lima, nli), 54).
+charge_time((dtm, lgr), 9).
+charge_time((dtm, jfk), 12).
+charge_time((dtm, rep), 30).
+charge_time((dtm, lima), 46).
+charge_time((dtm, dtm), 0).
+charge_time((dtm, ttb), 10).
+charge_time((dtm, nli), 8).
+charge_time((ttb, lgr), 11).
+charge_time((ttb, jfk), 20).
+charge_time((ttb, rep), 34).
+charge_time((ttb, lima), 48).
+charge_time((ttb, dtm), 10).
+charge_time((ttb, ttb), 0).
+charge_time((ttb, nli), 12).
+charge_time((nli, lgr), 16).
+charge_time((nli, jfk), 20).
+charge_time((nli, rep), 38).
+charge_time((nli, lima), 54).
+charge_time((nli, dtm), 8).
+charge_time((nli, ttb), 12).
+charge_time((nli, nli), 0).
+edge((lgr,lgr)).
+edge((lgr,jfk)).
+edge((lgr,rep)).
+edge((lgr,lima)).
+edge((lgr,dtm)).
+edge((lgr,ttb)).
+edge((lgr,nli)).
+edge((jfk,lgr)).
 edge((jfk,jfk)).
-edge((jfk,lga)).
-edge((jfk,teb)).
-edge((jfk,ryend)).
-edge((jfk,cri)).
-edge((jfk,cimbl)).
-edge((jfk,dandy)).
-edge((lga,jfk)).
-edge((lga,lga)).
-edge((lga,teb)).
-edge((lga,ryend)).
-edge((lga,cri)).
-edge((lga,cimbl)).
-edge((lga,dandy)).
-edge((teb,jfk)).
-edge((teb,lga)).
-edge((teb,teb)).
-edge((teb,ryend)).
-edge((teb,cri)).
-edge((teb,cimbl)).
-edge((teb,dandy)).
-edge((ryend,jfk)).
-edge((ryend,lga)).
-edge((ryend,teb)).
-edge((ryend,ryend)).
-edge((ryend,cri)).
-edge((ryend,cimbl)).
-edge((ryend,dandy)).
-edge((cri,jfk)).
-edge((cri,lga)).
-edge((cri,teb)).
-edge((cri,ryend)).
-edge((cri,cri)).
-edge((cri,cimbl)).
-edge((cri,dandy)).
-edge((cimbl,jfk)).
-edge((cimbl,lga)).
-edge((cimbl,teb)).
-edge((cimbl,ryend)).
-edge((cimbl,cri)).
-edge((cimbl,cimbl)).
-edge((cimbl,dandy)).
-edge((dandy,jfk)).
-edge((dandy,lga)).
-edge((dandy,teb)).
-edge((dandy,ryend)).
-edge((dandy,cri)).
-edge((dandy,cimbl)).
-edge((dandy,dandy)).
+edge((jfk,rep)).
+edge((jfk,lima)).
+edge((jfk,dtm)).
+edge((jfk,ttb)).
+edge((jfk,nli)).
+edge((rep,lgr)).
+edge((rep,jfk)).
+edge((rep,rep)).
+edge((rep,lima)).
+edge((rep,dtm)).
+edge((rep,ttb)).
+edge((rep,nli)).
+edge((lima,lgr)).
+edge((lima,jfk)).
+edge((lima,rep)).
+edge((lima,lima)).
+edge((lima,dtm)).
+edge((lima,ttb)).
+edge((lima,nli)).
+edge((dtm,lgr)).
+edge((dtm,jfk)).
+edge((dtm,rep)).
+edge((dtm,lima)).
+edge((dtm,dtm)).
+edge((dtm,ttb)).
+edge((dtm,nli)).
+edge((ttb,lgr)).
+edge((ttb,jfk)).
+edge((ttb,rep)).
+edge((ttb,lima)).
+edge((ttb,dtm)).
+edge((ttb,ttb)).
+edge((ttb,nli)).
+edge((nli,lgr)).
+edge((nli,jfk)).
+edge((nli,rep)).
+edge((nli,lima)).
+edge((nli,dtm)).
+edge((nli,ttb)).
+edge((nli,nli)).
 
 edge_loop((V,V)) :- edge((V,V)).

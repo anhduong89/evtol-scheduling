@@ -1,5 +1,4 @@
 % ------ INSTANCES
-#include "instances/network_NY.lp".
 #include "instances/init.lp".
 #include "instances/rq.lp".
 

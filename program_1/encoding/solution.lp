@@ -7,10 +7,9 @@
 % #show distance_time/1. 
 % #show distance_charge/1. 
 
+
 edge(E) :- as(_,E,_,_). 
-
 agent(D) :- as(D,_,_,_). 
-
 step(S) :- as(_,_,_,S). 
 
 
