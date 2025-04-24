@@ -29,7 +29,11 @@ seg(1..max_seg).
 :~ as(_,E,0,_), not edge_loop(E). [1@1]
 
 % Prioritize scheduling higher-revenue flight
-#heuristic as(_,E,W,_):distance(E,S). [W*S,true]
+% #heuristic as(_,E,W,_):distance(E,S). [W*S,true]
+
+% #heuristic as(_,_,W,_). [W,true]
+
+#heuristic as(_,E,W,_):distance(E,S). [W*S,false]
 
 
 #show.
