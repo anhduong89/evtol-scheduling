@@ -35,19 +35,28 @@ next(0, D) :- agent(D), flight_time_need(D, FT), FT = #min{T : flight_time_need(
 
 :- agent(A), #count{D : next(A,D)} = 0.
 
-:- next(X, D), next(X-1,D'), flight_time_need(D', FT'), flight_time_need(D, FT), FT' > FT. 
+:- next(X, D), next(X-1,D'), X > 0, flight_time_need(D', FT'), flight_time_need(D, FT), FT' > FT. 
 
-:- next(X, D), next(X-1,D'), flight_time_need(D', FT'), flight_time_need(D, FT), 
-                             #count{D1 : flight_time_need(D1, F1), FT' < F1, F1 < FT} > 0.
-
-% next(X, D) :- next(X-1, D'), agent(D), flight_time_need(D', FT), flight_time_need(D, FT). 
-
-% next(X, D) :- next(X-1, D'), agent(D), flight_time_need(D', FT'), flight_time_need(D, FT), FT' < FT, 
-%                             #count{D1 : flight_time_need(D1, FT), D1 < D  } = 0,
-%                              #count{D1 : flight_time_need(D1, F1), FT' < F1, F1 < FT} = 0.
 
 maxnext(X) :- X = #max{O : next(O, _)}.
 
-pair(X, Y, D, D1)   :- next(X, D), next(Y, D1), X < Y, maxnext(Z), X + Y = Z. 
+pair(X, Y, D, D1, FT + FT')   :- next(X, D), next(Y, D1), X < Y, maxnext(Z), X + Y = Z, 
+                                 flight_time_need(D, FT), flight_time_need(D1, FT').
 
 %:- agent(X), #count{Y : pair(X,Y,_,_)} == 0, #count{Y : pair(Y,X,_,_)} == 0.
+
+step(1..13). 
+
+flight_time_s(D, S, FT) :- agent(D), step(S), 
+                           FT = #sum{T, S': flight_time(E, T), as(D, E, _, S'), S' < S }. 
+
+shared(D, D', FT, FT', NFT-FT, NFT'-FT') :- 
+      pair(X, Y, D, D', _), 
+      as(D, (L,L'), _, S),
+      flight_time_s(D, S, FT), 
+      flight_time_need(D, NFT), 
+      as(D', (L'',L'), _, S'),
+      flight_time_s(D', S', FT'),
+      flight_time_need(D', NFT').
+
+
