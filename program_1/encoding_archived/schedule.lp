@@ -30,7 +30,7 @@ seg(1..max_seg).
 % #heuristic as(D,E,W,X):distance(E,S). [D*100 + W*S*(max_seg-X+1)/10,true]
 
 % Prioritize scheduling higher-revenue flight
-#heuristic as(_,E,W,_):distance(E,S). [W*S,true]
+% #heuristic as(_,E,W,_):distance(E,S). [W*S,true]
 
 % Prioritize scheduling higher-revenue flights earlier in the trajectory
 % #heuristic as(_,E,W,X):distance(E,S). [W*S*(max_seg-X+1),true]
@@ -41,13 +41,13 @@ seg(1..max_seg).
 %  ----------------------------
 % ----- TIME SCHEDULE WITH DIFFERENT CONSTRAINT
 % start time at initial vertiport = charge duration
-% &diff {start(D,E,1)} = 0 :- as(D,E,_,1).
+&diff {start(D,E,1)} = 0 :- as(D,E,_,1).
 
-% &diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
+&diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
 
-% &diff {arrival(D,E,X) - start(D,E,X)} = FT :- flight_time(E,FT), as(D,E,_,X).
+&diff {arrival(D,E,X) - start(D,E,X)} = FT :- flight_time(E,FT), as(D,E,_,X).
 
-% &diff {start(D,E',X+1) - arrival(D,E,X)} >= CT :- charge_time(E',CT), as(D,E,_,X), as(D,E',_,X+1).
+&diff {start(D,E',X+1) - arrival(D,E,X)} >= CT :- charge_time(E',CT), as(D,E,_,X), as(D,E',_,X+1).
 %  ----------------------------
 % ------ optimization_1: penalize unserved customers.
 
@@ -62,7 +62,7 @@ seg(1..max_seg).
 
 % :~ total_served(P). [-P]
 
-:~ as(_,_,W,_), W>0. [-W@3]
+% :~ as(D,E,W,X), distance(E,S). [-W*S]
 
 % ------ optimization_2: penalize empty flights.
 
@@ -71,10 +71,10 @@ seg(1..max_seg).
 
 % ------ optimization_2.1: penalize empty flights and not stationed. (could has better solution)
 
-penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
-:~ penalty(D, _, S, P). [P, D, S]
+% penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
+% :~ penalty(D, _, S, P). [P, D, S]
 
-:- as(D,E,W,_), as(D',E,W',_), W>0, W'>0, D!=D', W+W'<4.
+% :- as(D,E,W,_), as(D',E,W',_), W>0, W'>0, D!=D', W+W'<4.
 
 % % ------ optimization_4: Maximize profit
 
@@ -83,7 +83,6 @@ penalty(D, E, S, 1) :- as(D, E, 0, S), not edge_loop(E).
 %  ----------------------------
 
 % display
-% #show as/4.
-#show.
-% #show remain_cust(E,P,X): remain_cust(E,P,X), X=max_seg.
 #show as/4.
+% #show.
+% #show remain_cust(E,P,X): remain_cust(E,P,X), X=max_seg.

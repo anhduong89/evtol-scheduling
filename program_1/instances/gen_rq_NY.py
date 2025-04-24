@@ -12,7 +12,8 @@ out_filename = 'rq.lp'
 
 
 
-vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+# vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+vPort_id = ["lgr", "jfk", "rep", "lima", "dtm", "ttb", "nli"]
 request_p = [[j, i] for i in range(0, 7) for j in range(0, 7) if i != j]
 matrix_out = [[random.randint(0, cust) if i!=j else 0 for j in range(0, len(vPort_id))] for i in range(0, len(vPort_id))]
 

@@ -14,8 +14,25 @@ import pprint
 
 # os.chdir('/Users/duong/Dropbox/NMSU/NASA_ULI_2022/git-public/evtol-scheduling-rqtime/program_1')
 
+velocity = 100 # mph
+e_dischg = 4 # kWh/mile
+e_max = 100 # kWh
+g_i=250 # kW
+city_names = ["lgr", "jfk", "rep", "lima", "dtm", "ttb", "nli"]
+nb_edges = len(city_names)*(len(city_names)-1)
+dist = np.array([
+    [ 0., 10.68, 24.32, 40.51,  8.876, 11.08, 16.6],
+    [10.68,  0.,  20.15, 37.19, 12.82,  20.73, 20.81],
+    [24.32,  20.15,  0., 17.05, 31.33,  34.96,  39.74],
+    [40.51, 37.19, 17.05,  0., 48.12,  50.47,  56.5],
+    [ 8.876, 12.82, 31.33, 48.12,  0., 10.63, 8.407],
+    [11.08,  20.73,  34.96,  50.47, 10.63,  0.,  12.26],
+    [16.6, 20.81,  39.74,  56.5, 8.407,  12.26,  0.]
+                                ])
+
+
 def CalProfit(*answer_set):
-    velocity = 100
+
     # Load the Excel file and read only the first 8 rows with the first row as the index
     MER_LMP = {
         'MER': pd.read_excel(fr'MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
@@ -23,7 +40,21 @@ def CalProfit(*answer_set):
     }
 
     # Replace index row with ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
-    city_names = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+    # city_names = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+    # # distance between city ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+    # dist = np.array(
+    #     [
+    #         [0.,          10.48113508,  18.51467981,  18.54127528,  5.7385456,    13.03650962,  20.09902115], 
+    #         [10.48113508,  0.,           9.15619145,   15.04929904,  10.56004164,  6.52505341,   13.22524436],
+    #         [18.51467981,  9.15619145,   0.,           11.47944457,  16.1038714,   6.31668958,   6.33708216 ],
+    #         [18.54127528,  15.04929904,  11.47944457,  0.,           13.32823709,  8.5872692,    6.16996146 ],
+    #         [5.7385456,    10.56004164,  16.1038714,   13.32823709,  0.,           9.86908414,   16.01052999],
+    #         [13.03650962,  6.52505341,   6.31668958,   8.5872692,    9.86908414,   0.,           7.31033037 ],
+    #         [20.09902115,  13.22524436,  6.33708216,   6.16996146,   16.01052999,  7.31033037,   0.         ]
+    #         ]
+    #     )
+    
+
     MER_LMP['MER'].index = city_names
     MER_LMP['LMP'].index = city_names
 
@@ -34,19 +65,10 @@ def CalProfit(*answer_set):
     def fly_time(i, j):
         return dist[i][j]/velocity * 60
 
-    # distance between city ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
-    dist = np.array(
-        [
-            [0.,          10.48113508,  18.51467981,  18.54127528,  5.7385456,    13.03650962,  20.09902115], 
-            [10.48113508,  0.,           9.15619145,   15.04929904,  10.56004164,  6.52505341,   13.22524436],
-            [18.51467981,  9.15619145,   0.,           11.47944457,  16.1038714,   6.31668958,   6.33708216 ],
-            [18.54127528,  15.04929904,  11.47944457,  0.,           13.32823709,  8.5872692,    6.16996146 ],
-            [5.7385456,    10.56004164,  16.1038714,   13.32823709,  0.,           9.86908414,   16.01052999],
-            [13.03650962,  6.52505341,   6.31668958,   8.5872692,    9.86908414,   0.,           7.31033037 ],
-            [20.09902115,  13.22524436,  6.33708216,   6.16996146,   16.01052999,  7.31033037,   0.         ]
-            ]
-        )
 
+
+
+    
     # dist = np.round(dist)
     min_trav_time = np.min(dist[np.nonzero(dist)])/velocity*60
     # min_trav_time=2.2
@@ -322,6 +344,17 @@ def CalProfit(*answer_set):
     print(f'Number of flights that agents carry zero customer: {empty_flight_count}')
     return total_revenue, total_em_cost, total_chg_cost, total_revenue-total_em_cost -total_chg_cost
 
+def EstimateMinAgents(horizon, b_init, demand_cust, aircraft_capacity):
+    """
+    b_init in charging minute
+    """
+    minimum_flights_per_edge = math.ceil(demand_cust/aircraft_capacity)
+    require_operation_time = np.sum(dist)*(60/velocity + e_dischg*60/g_i)
+    require_operation_time_serve_all_cust = minimum_flights_per_edge * require_operation_time
+    min_number_agents = math.ceil(require_operation_time_serve_all_cust/(horizon+b_init))
+    min_number_segments = math.ceil((minimum_flights_per_edge*nb_edges)/min_number_agents)
+    return min_number_agents, min_number_segments
 
-    
+if __name__ == "__main__":
+    print(EstimateMinAgents(360, 60, 30, 4))
 # %%

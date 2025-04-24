@@ -6,7 +6,7 @@ import argparse
 import os
 import time
 import subprocess
-from utils.calculate_profit import CalProfit
+from utils.utils import CalProfit, EstimateMinAgents
 import random
 from typing import List
 
@@ -16,13 +16,15 @@ LINE = "---------------------------------------------------------------------"
 # Argument parsing
 parser = argparse.ArgumentParser(description='Solver for eVTOL scheduling.')
 parser.add_argument('--n_rq', type=int, default = 30, help='Number of requests')
-parser.add_argument('--n_agents', type=int, default = 34, help='Number of agents')
-parser.add_argument('--max_segment', type=int, default = 10, help='Maximum segment')
+parser.add_argument('--n_agents', type=int, default = 32, help='Number of agents')
+parser.add_argument('--max_segment', type=int, default = 11, help='Maximum segment')
 parser.add_argument('--horizon', type=int, default = 180, help='Horizon')
 parser.add_argument('--time_limit', type=int, default = 30, help='Time limit')
 parser.add_argument('--seed', type=int, default = 1, help='seed for random initial location')
 parser.add_argument('--vertiport_cap', type=int, default = 6, help='vertiport capacity')
 args = parser.parse_args()
+
+min_agents, min_segments=EstimateMinAgents(horizon=args.horizon, b_init=60, demand_cust=args.n_rq, aircraft_capacity=4)
 
 def InitNagent(nagents):
     if nagents is not None:
@@ -66,7 +68,7 @@ class Schedule:
         self.control_par =  ['-c', f'start_seg={self.start_segment}'
                             , '-c', f'max_seg={self.max_segment}'
                             , '-c', f'horizon={self.horizon}'
-                            , '-t2'
+                            , '-t4'
                             ]
         self.choose_heu = choose_heu
         self.choose_opt = choose_opt
@@ -154,7 +156,7 @@ class Schedule:
             dl_assignments.append(f"dl({str(dl_variable)},{dl_value})")
         model.dl_assignments = dl_assignments # atom dl
         # calculate revenue, cost, profit
-        model.revenue, model.em_cost, model.chg_cost, model.profit = CalProfit(model.flight_path.split() + model.dl_assignments)
+        # model.revenue, model.em_cost, model.chg_cost, model.profit = CalProfit(model.flight_path.split() + model.dl_assignments)
         ComputeRevenue(model.flight_path)
         model.to_visualized = model.flight_path + " "+ " ".join(model.dl_assignments)
         GetNumberOfAgentsEachVertiport(model.dl_assignments)
@@ -195,21 +197,21 @@ def GetNumberOfAgentsEachVertiport(dl_assignments):
 # processing model resulting from solver
 
 def CentralSchedule():
-    schedule = Schedule(choose_opt=[1,2])
+    schedule = Schedule()
     models = schedule.Solving()
     best_model = GetBestModelProfit(models)
     return best_model
 
 def ConsecutiveSchedule():
-    schedule = Schedule()
+    schedule = Schedule(choose_opt=[2,2.1])
     models = schedule.Solving()
-    best_model = GetBestModelProfit(models)
+    best_model = GetBestModelOptCost(models)
     flight_path = best_model.flight_path_clingo_format
     
     schedule = Schedule(start_segment=11, max_segment=13, heuristic=False, choose_opt=[1,2.1])
     print(flight_path)
     models = schedule.Solving(fact_load=flight_path)
-    best_model = GetBestModelProfit(models)
+    best_model = GetBestModelOptCost(models)
 
     return best_model
 
@@ -299,6 +301,9 @@ class IncrementalSchedule(Schedule):
 
 
 if __name__ == "__main__":
-    model = CentralSchedule()
-    with open("results/trajectories.lp", "w") as file:
-        file.write(model.to_visualized)
+    InitNagent(args.n_agents)
+    InitRq(args.n_rq)
+    pass
+    # model = ConsecutiveSchedule()
+    # with open("results/trajectories.lp", "w") as file:
+    #     file.write(model.to_visualized)

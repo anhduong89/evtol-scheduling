@@ -1,1 +1,3 @@
-clingo-dl schedule.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4
+clingo schedule/s.lp -c start_seg=1 -c max_seg=11 --heuristic=Domain -t4 --outf=1
+
+clingo-dl schedule/time.lp schedule/traj.lp -c max_seg=11 -t4 --outf=1

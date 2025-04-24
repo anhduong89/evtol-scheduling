@@ -16,7 +16,8 @@ fName = 'instances/init.lp'
 #discharge rate
 #emax
 #emin
-vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+# vPort_id = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+vPort_id = ["lgr", "jfk", "rep", "lima", "dtm", "ttb", "nli"]
 emax_print = [[i, 100] for i in range(0, nAgents)]
 emin_print = [[i, 0] for i in range(0, nAgents)]
 dischg_rate_print = [[i, 4] for i in range(0, nAgents)]
