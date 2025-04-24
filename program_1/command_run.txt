@@ -1,1 +1,1 @@
-clingo-dl s.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --out-ifs=\\n --out-atomf=%s.
+clingo-dl schedule.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --out-ifs=\\n --out-atomf=%s.
