@@ -33,6 +33,7 @@ solution_time(X) :- X = #sum{FT : flight_time_need(_, FT)}.
 
 solution_charge(X) :- X = #sum{FT : charge_time_need(_, FT)}. 
 
+
 min_time(D) :-  agent(D), total_time_need(D, X),  X = #min{T : total_time_need(_, T)}. 
 max_time(D) :-  agent(D), total_time_need(D, X),  X = #max{T : total_time_need(_, T)}. 
 
@@ -42,7 +43,7 @@ flight_time_s(D, S, FT+CT) :- agent(D), step(S),
                             
 charging_time(CT) :- CT = #sum{T, E : charge_time(E, T)}.
 
-shared(D, D', L',FT, FT', NFT-FT, NFT'-FT') :-
+shared(D, D', L',S, S', FT, FT', NFT-FT, NFT'-FT') :-
       min_time(D), 
       max_time(D'), 
       as(D, (_,L'), _, S), 
@@ -52,39 +53,23 @@ shared(D, D', L',FT, FT', NFT-FT, NFT'-FT') :-
       flight_time_s(D', S', FT'),
       total_time_need(D', NFT').
 
-mixed(D, D', L, FT1 + NFT2, FT2 + NFT1) :- shared(D, D', L, FT1, FT2 , NFT1,  NFT2). 
+mixed(D, D', L, S, S', FT1 + NFT2, FT2 + NFT1, X) :- shared(D, D', L, S, S', FT1, FT2 , NFT1,  NFT2), X = FT1 + NFT2 - FT2 - NFT1, X >= 0. 
+
+mixed(D, D', L, S, S', FT1 + NFT2, FT2 + NFT1, -X) :- shared(D, D', L, S, S', FT1, FT2 , NFT1,  NFT2), X = FT1 + NFT2 - FT2 - NFT1, X < 0. 
 
 
+mixed_best(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), Z = #min{Z' :  mixed(_, _, _, _, _, _, _, Z') }. 
 
-% next(0, D) :- agent(D), flight_time_need(D, FT), FT = #min{T : flight_time_need(_, T)}.
+nas(D, E, W, X) :- as(D, E, W, X), min_time(D0), max_time(D1), D != D0, D!= D1. 
 
-% 1{next(0..33, D)}1 :- agent(D).
+nas(D, E, W, S) :- min_time(D), as(D, E, W, S), mixed_best(D, _, _, S1, _, _, _), S <= S1. 
 
-% :- agent(A), #count{D : next(A,D)} = 0.
+nas(D, E, W, S - S2 + S1) :- min_time(D), as(D', E, W, S), mixed_best(D, D', _, S1, S2, _, _), S > S2. 
 
-% :- next(X, D), next(X-1,D'), X > 0, flight_time_need(D', FT'), flight_time_need(D, FT), FT' > FT. 
+nas(D, E, W, S) :- max_time(D), as(D, E, W, S), mixed_best(_, D, _, _, S2, _, _), S <= S2. 
 
+nas(D, E, W, S - S1 + S2) :- max_time(D), as(D', E, W, S), mixed_best(D', D, _, S1, S2, _, _), S > S1. 
 
-% maxnext(X) :- X = #max{O : next(O, _)}.
-
-% pair(X, Y, D, D1, FT + FT')   :- next(X, D), next(Y, D1), X < Y, maxnext(Z), X + Y = Z, 
-%                                  flight_time_need(D, FT), flight_time_need(D1, FT').
-
-% %:- agent(X), #count{Y : pair(X,Y,_,_)} == 0, #count{Y : pair(Y,X,_,_)} == 0.
-
-% step(1..13). 
-
-
-
-
-
-% shared(D, D', FT, FT', NFT-FT, NFT'-FT') :- 
-%       pair(X, Y, D, D', _), 
-%       as(D, (L,L'), _, S),
-%       flight_time_s(D, S, FT), 
-%       flight_time_need(D, NFT), 
-%       as(D', (L'',L'), _, S'),
-%       flight_time_s(D', S', FT'),
-%       flight_time_need(D', NFT').
-
+#show. 
+#show as(D, E, W, S) : nas(D, E, W, S). 
 
