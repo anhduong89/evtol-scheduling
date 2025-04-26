@@ -1,4 +1,5 @@
 % ------ INSTANCES
+% #include "instances/network_NY_0.lp".
 #include "instances/init.lp".
 #include "instances/rq.lp".
 
@@ -32,7 +33,7 @@ seg(1..max_seg).
 
 % #heuristic as(_,_,W,_). [W,true]
 
-#heuristic as(_,E,W,_):distance(E,S). [W*S,false]
+#heuristic as(_,E,W,_):distance(E,S). [W*S,true]
 
 
 #show.

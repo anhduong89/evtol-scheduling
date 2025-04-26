@@ -1,5 +1,2 @@
-gate(1..6,V) :- vertiport(V).
-
-vertiport(1;2).
-
-#show gate/2.
+as(25,(cimbl,jfk),4,1). as(25,(jfk,cri),0,2). as(25,(cri,lga),2,3). as(25,(lga,dandy),4,4). as(25,(dandy,cimbl),4,5). as(25,(cimbl,dandy),4,6). as(25,(dandy,teb),4,7). as(25,(teb,teb),0,8). as(25,(teb,ryend),0,9). as(25,(ryend,lga),4,10). as(25,(lga,cri),4,11). as(25,(cri,ryend),0,12). as(25,(ryend,cimbl),4,13).
+as(1,(cri,dandy),4,1). as(1,(dandy,jfk),2,2). as(1,(jfk,jfk),0,3). as(1,(jfk,dandy),4,4). as(1,(dandy,lga),4,5). as(1,(lga,cimbl),4,6). as(1,(cimbl,teb),4,7). as(1,(teb,cimbl),2,8). as(1,(cimbl,jfk),0,9). as(1,(jfk,ryend),4,10). as(1,(ryend,cri),4,11). as(1,(cri,lga),4,12). as(1,(lga,teb),4,13).

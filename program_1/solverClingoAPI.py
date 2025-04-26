@@ -10,6 +10,7 @@ from utils.utils import CalProfit, EstimateMinAgents
 from instances.gen_instance import GenRq, InitLoc
 import random
 from typing import List
+import re
 
 def on_model(m):
     print (m)
@@ -35,15 +36,16 @@ class Schedule:
                  , max_segment = args.max_segment
                  , horizon = args.horizon
                  , encoding = 'schedule.lp'
-                 , network = 'instances/network_NY_0.lp'
-                 , heuristic= True
-                 , choose_heu = [2]
-                 , choose_opt = [2]
-                 , n_rq = args.n_rq
-                 , n_agents = args.n_agents
-                 , seed_init = args.seed
+                 , network = None #example 'instances/network_NY_0.lp'
+                 , heuristic= False
+                 , choose_heu = None #example [2]
+                 , choose_opt = None #example [2]
+                 , n_rq = None #example args.n_rq
+                 , n_agents = None #example args.n_agents
+                 , seed_init = None #example args.seed
                  , seed_rq = 1
                  , vert_cap = 12
+                 , dl_theory = False
                  ):
         # initialize clingo-dl theory
         self.thy = ClingoDLTheory()
@@ -55,17 +57,22 @@ class Schedule:
         self.network = network
         self.seed_init = seed_init
         self.seed_rq = seed_rq
-        self.control_par =  ['-c', f'start_seg={self.start_segment}'
-                            , '-c', f'max_seg={self.max_segment}'
-                            , '-c', f'horizon={self.horizon}'
-                            , '-t4'
-                            ]
+        self.control_par = ['-c', f'start_seg={self.start_segment}'
+                            ,'-t4']
+        if horizon != None:
+            self.control_par.extend(['-c', f'horizon={self.horizon}'])
+        if max_segment != None:
+            self.control_par.extend([ '-c', f'max_seg={self.max_segment}'])
+            
         self.choose_heu = choose_heu
         self.choose_opt = choose_opt
+        self.dl_theory = dl_theory
         if heuristic == True:
             self.control_par.append('--heuristic=Domain')
-        InitLoc(nAgents=n_agents, seed=seed_init, limit_nAgents_each_vertiport=vert_cap)
-        GenRq(cust=n_rq, seed=seed_rq)
+        if n_agents != None:
+            InitLoc(nAgents=n_agents, seed=seed_init, limit_nAgents_each_vertiport=vert_cap)
+        if n_rq != None:
+            GenRq(cust=n_rq, seed=seed_rq)
 
     def Solving(self, fact_load = ""):
         self.models = []
@@ -75,11 +82,12 @@ class Schedule:
         self.thy.register(ctl)
         
         # Read schedule.lp content into variable prg
-        with open(self.network, 'r') as file:
-            prg = file.read()
-        with open(self.encoding, 'r') as file:
-            prg += file.read()
 
+        with open(self.encoding, 'r') as file:
+            prg = file.read()
+        if self.network != None:
+            with open(self.network, 'r') as file:
+                prg += file.read()
         # add opt specfication to program
         if self.choose_opt != None:
             for opt in self.choose_opt:
@@ -132,7 +140,7 @@ class Schedule:
             return self.models
 
     
-    def make_model(self,rawmodel):
+    def make_model(self, rawmodel):
         model = argparse.Namespace()
         model.opt_cost = rawmodel.cost.copy() # optimization value of answer set
         model.number = rawmodel.number
@@ -145,20 +153,30 @@ class Schedule:
         model.output = str(rawmodel) # atom as
         model.flight_path = [symbol for symbol in str(rawmodel).split() if symbol.startswith('as')]
         model.flight_path_fact_format = " ".join([i + '.' for i in model.flight_path])
-        
-        # dl_assignments = []
-        # for dl_variable, dl_value in self.thy.assignment(rawmodel.thread_id):
-        #     dl_assignments.append(f"dl({str(dl_variable)},{dl_value})")
-        # model.dl_assignments = dl_assignments # atom dl
-        # # calculate revenue, cost, profit
-        # # model.revenue, model.em_cost, model.chg_cost, model.profit = CalProfit(model.flight_path.split() + model.dl_assignments)
-        # ComputeRevenue(model.flight_path)
-        # model.to_visualized = model.flight_path + " "+ " ".join(model.dl_assignments)
-        # GetNumberOfAgentsEachVertiport(model.dl_assignments)
-        # print(model.to_visualized)
-        
+        if self.dl_theory == True:
+            dl_assignments = []
+            for dl_variable, dl_value in self.thy.assignment(rawmodel.thread_id):
+                dl_assignments.append(f"dl({str(dl_variable)},{dl_value})")
+            model.dl_assignments = dl_assignments # atom dl
+            # calculate revenue, cost, profit
+            # model.revenue, model.em_cost, model.chg_cost, model.profit = CalProfit(model.flight_path.split() + model.dl_assignments)
+            # ComputeRevenue(model.flight_path)
+            model.to_visualized = model.flight_path_fact_format + " ".join([i + '.' for i in model.dl_assignments])
+            # GetNumberOfAgentsEachVertiport(model.dl_assignments)
+
         return model
-    
+
+def ClingoSolver(prg_path, facts):
+    with open(prg_path, "r") as file:
+        prg = file.read()
+    prg += facts
+    ctl = Control()
+    ctl.add("base", [], prg)
+    ctl.ground([("base", [])])
+    with ctl.solve(yield_=True) as handle:
+        for model in handle:
+            return " ".join([f"{str(symbol)}." for symbol in model.symbols(shown=True)])
+
 def GetBestModelOptCost(models:List[argparse.Namespace]):
     if not models:
         return None
@@ -246,14 +264,17 @@ def SwitchingTrajectory():
                  , n_agents = 34
                  , seed_init = 1
                  , seed_rq = 1
+                 , dl_theory=False
                  )
     models = s.Solving()
     best_model = GetBestModelOptCost(models=models)
     stop = False
     # switching
     answer_set = best_model.flight_path_fact_format
-    print(answer_set)
+    # print('Answer Set first round:\n', answer_set)
     print("start switching!")
+    previous_min_time = ""
+    previous_max_time = ""
     while stop == False:
         sw = Schedule(time_limit=30
                     , encoding = 'encoding/solution.lp'
@@ -263,11 +284,48 @@ def SwitchingTrajectory():
                     , choose_opt = None
                     )
         model = sw.Solving(fact_load=answer_set)
+        model_after_switch = model[0]
+        # print(model_after_switch.output)
         # Extract min_time and max_time
-        min_time = [symbol for symbol in model[0].output.split() if symbol.startswith('min_time')]
-        max_time = [symbol for symbol in model[0].output.split() if symbol.startswith('max_time')]
-        print(f"min is {min_time} and max is {max_time}")
-        answer_set = model[0].flight_path_fact_format
+        min_time = int(re.search(r"min_time\((\d+)\)", model_after_switch.output).group(1))
+        max_time = int(re.search(r"max_time\((\d+)\)", model_after_switch.output).group(1))
+        print(f"previous min time agent {previous_min_time} and previous max time agent {previous_max_time}")
+        if (min_time,max_time) == (previous_min_time,previous_max_time) or (max_time,min_time) == (previous_min_time,previous_max_time):
+            stop = True
+        print(f"min time agent {min_time} and max time agent {max_time}")
+        print("flight path before swap:")
+        pattern_min_time = re.compile(rf"as\({str(min_time)},")
+        pattern_max_time = re.compile(rf"as\({str(max_time)},")
+        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_min_time.match(f)])))
+        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_max_time.match(f)])))
+        print(f"best cuts: ", re.findall(r"mixed_best\([^)]+\)", model_after_switch.output))
+        # print("empty flights: ", re.search(r"wasted\(([^)]+)\)", model_after_switch.output).group(1))
+        # shared_strings = re.findall(rf"shared\({min_time},{max_time},[^)]+\)|shared\({max_time},{min_time},[^)]+\)", model_after_switch.output)
+        # print("time swapping min_time and max_time: ", shared_strings)
+        
+        previous_min_time = min_time
+        previous_max_time = max_time
+        answer_set = model_after_switch.flight_path_fact_format
+        print("flight path after swap:")
+        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_min_time.match(f)])))
+        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_max_time.match(f)])))
+        print(f"solution time: ", re.findall(r"solution_time\([^)]+\)", model_after_switch.output))
+    # print(answer_set)
+    print(f"total time needed: ", re.findall(r"total_time_need\([^)]+\)", model_after_switch.output))
+
+    dl = Schedule(time_limit=30
+                    , encoding = 'encoding/time_0.lp'
+                    , network = 'instances/network_NY_0.lp'
+                    , heuristic= False
+                    , dl_theory= True
+                    , horizon=None
+                    , max_segment=None
+                    )
+    time = dl.Solving(fact_load=answer_set)
+    # print(time[0].to_visualized)
+    return time[0].to_visualized
+    
+
     
 
 
@@ -278,7 +336,7 @@ def SwitchingTrajectory():
 
 
 if __name__ == "__main__":
-    SwitchingTrajectory()
+    time = SwitchingTrajectory()
     # model = ConsecutiveSchedule()
-    # with open("results/trajectories.lp", "w") as file:
-    #     file.write(model.to_visualized)
+    with open("results/trajectories.lp", "w") as file:
+        file.write(time)

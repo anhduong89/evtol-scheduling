@@ -1,1 +1,7 @@
-clingo schedule/s.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --out-ifs=\\n --out-atomf=%s.
+clingo encoding/s.lp instances/network_NY_0.lp -c start_seg=1 -c max_seg=13 --heuristic=Domain -t4 --out-ifs=\\n --out-atomf=%s.
+
+clingo encoding/solution.lp instances/network_NY_0.lp test_1.lp -t4 --out-ifs=\\n --out-atomf=%s.
+
+clingo-dl encoding/time_0.lp output_3.lp
+
+clingo output_3.lp test.lp

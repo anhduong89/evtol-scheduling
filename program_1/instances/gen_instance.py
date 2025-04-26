@@ -50,8 +50,7 @@ def InitLoc(nAgents, seed, limit_nAgents_each_vertiport):
         
     variable = [init_loc_print, emax_print, emin_print, dischg_rate_print, capacity_print, init_battery_print]
     atoms_name = ['init_loc', 'emax', 'emin', 'dischg_rate', 'capacity', 'b_init']
-    # Print the current working directory
-    print("Current Working Directory:", os.getcwd())
+
     # new_file_name = "instances/recorded_init/init_{seed}.lp".format(seed = seed)
     f = open(decoupled_init_fName,"w+")
     #AGENT
@@ -117,8 +116,7 @@ def GenRq(cust, seed):
         else:
             cust_rand = matrix_out[vPort_id.index(origin)][vPort_id.index(destination)]
             request_print += [[no, (origin, destination), cust_rand]]
-    # Print the current working directory
-    print("Current Working Directory:", os.getcwd()) 
+
     f = open(f'instances/rq.lp',"w+")
     f.write(f'%{matrix_out}')
     f.write('%request(ID, (edge), number of request passenger)\n')
