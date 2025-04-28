@@ -1,4 +1,4 @@
-from clingo import Control
+from clingo import Control, Model
 from clingo.ast import parse_string, ProgramBuilder
 from clingodl import ClingoDLTheory
 import sys
@@ -35,24 +35,10 @@ min_agents, min_segments = EstimateMinAgents(horizon=180, b_init=60, demand_cust
 
 # Class to handle scheduling logic
 class Schedule:
-    def __init__(self
-                 , time_limit = 30  # Time limit for solving
-                 , start_segment = 1  # Starting segment
-                 , max_segment = 13  # Maximum segment
-                 , horizon = 180  # Time horizon
-                 , encoding = 'schedule.lp'  # Encoding file
-                 , network = None  # Network file (optional)
-                 , heuristic= False  # Use heuristic or not
-                 , choose_heu = None  # Heuristic options
-                 , choose_opt = None  # Optimization options
-                 , n_rq = None  # Number of requests
-                 , n_agents = None  # Number of agents
-                 , seed_init = None  # Seed for initial location
-                 , seed_rq = 1  # Seed for request generation
-                 , vert_cap = 12  # Vertiport capacity
-                 , dl_theory = False  # Use ClingoDL theory or not
-                 ):
-        # Initialize ClingoDL theory
+    def __init__(self, time_limit: int = 30, start_segment: int = 1, max_segment: int = 13, horizon: int = 180, 
+                 encoding: str = 'schedule.lp', network: str = None, heuristic: bool = False, 
+                 choose_heu: list = None, choose_opt: list = None, n_rq: int = None, n_agents: int = None, 
+                 seed_init: int = None, seed_rq: int = 1, vert_cap: int = 12, dl_theory: bool = False):
         self.thy = ClingoDLTheory()
         self.time_limit = time_limit
         self.start_segment = start_segment
@@ -62,83 +48,61 @@ class Schedule:
         self.network = network
         self.seed_init = seed_init
         self.seed_rq = seed_rq
-        # Control parameters for Clingo
         self.control_par = ['-c', f'start_seg={self.start_segment}', '-t4']
-        if horizon != None:
+        if horizon is not None:
             self.control_par.extend(['-c', f'horizon={self.horizon}'])
-        if max_segment != None:
+        if max_segment is not None:
             self.control_par.extend(['-c', f'max_seg={self.max_segment}'])
-            
+        if heuristic:
+            self.control_par.append('--heuristic=Domain')
+        if n_agents is not None:
+            InitLoc(nAgents=n_agents, seed=seed_init, limit_nAgents_each_vertiport=vert_cap)
+        if n_rq is not None:
+            GenRq(cust=n_rq, seed=seed_rq)
         self.choose_heu = choose_heu
         self.choose_opt = choose_opt
         self.dl_theory = dl_theory
-        # Add heuristic option if enabled
-        if heuristic == True:
-            self.control_par.append('--heuristic=Domain')
-        # Initialize locations if number of agents is provided
-        if n_agents != None:
-            InitLoc(nAgents=n_agents, seed=seed_init, limit_nAgents_each_vertiport=vert_cap)
-        # Generate requests if number of requests is provided
-        if n_rq != None:
-            GenRq(cust=n_rq, seed=seed_rq)
 
-    # Method to solve the scheduling problem
-    def Solving(self, fact_load = ""):
+    def Solving(self, fact_load=""):
         self.models = []
-
-        # Initialize Clingo control object
         ctl = Control(self.control_par)
         self.thy.register(ctl)
-        
-        # Read the main encoding file
         with open(self.encoding, 'r') as file:
             prg = file.read()
-        # Append network file content if provided
-        if self.network != None:
+        if self.network:
             with open(self.network, 'r') as file:
                 prg += file.read()
-        # Append optimization specifications if provided
-        if self.choose_opt != None:
+        if self.choose_opt:
             for opt in self.choose_opt:
                 with open(f'opt_heu/opt_{opt}.lp', 'r') as file:
                     prg += file.read()
-        # Append heuristic specifications if provided
-        if self.choose_heu != None:
+        if self.choose_heu:
             for heu in self.choose_heu:
                 with open(f'opt_heu/heu_{heu}.lp', 'r') as file:
                     prg += file.read()
-        # Add additional facts to the program
         prg = fact_load + prg
-        # Write the program into the control object
         with ProgramBuilder(ctl) as bld:
             parse_string(prg, lambda ast: self.thy.rewrite_ast(ast, bld.add))
 
         try:
-            # Grounding the program
             print('Start Grounding...')
             ctl.ground([('base', [])])
             self.thy.prepare(ctl)
             print('Done grounding!')
-            # Solving the program
             print('Start Solving...')
             with ctl.solve(yield_=True, on_model=self.thy.on_model, async_=True) as hnd:
                 start_time = time.time()
-                def time_left(): return (time.time() - start_time)
                 time_limit = self.time_limit
-                # Loop to wait for solving results
                 while True:
                     hnd.resume()
-                    flag = hnd.wait(time_limit)  # Wait for a model or timeout
-                    time_limit = self.time_limit - time_left()
-                    print(f"{self.time_limit-time_limit}, {hnd.get()}")
-                    if time_limit <= 0:  # Stop solving if time limit is reached
+                    flag = hnd.wait(time_limit)
+                    time_limit = self.time_limit - (time.time() - start_time)
+                    print(f"{self.time_limit - time_limit}, {hnd.get()}")
+                    if time_limit <= 0:
                         print('Stop solving')
                         hnd.cancel()
                         break
-
-                    # Append the model to the list of models
                     self.models.append(self.make_model(hnd.model()))
-                        
                     print(LINE)
                 hnd.cancel()
         except KeyboardInterrupt:
@@ -146,23 +110,19 @@ class Schedule:
         finally:
             return self.models
 
-    # Method to process raw models into a structured format
-    def make_model(self, rawmodel):
+    def make_model(self, rawmodel: Model):
         model = argparse.Namespace()
-        model.opt_cost = rawmodel.cost.copy()  # Optimization cost of the answer set
+        model.opt_cost = rawmodel.cost.copy()
         model.number = rawmodel.number
-        model.output = str(rawmodel)  # Raw output of the model
-        # Extract flight paths from the model
+        model.output = str(rawmodel)
+        model.all_atoms = " ".join(map(str, rawmodel.symbols(atoms=True)))
         model.flight_path = [symbol for symbol in str(rawmodel).split() if symbol.startswith('as')]
         model.flight_path_fact_format = " ".join([i + '.' for i in model.flight_path])
-        if self.dl_theory == True:
-            dl_assignments = []
-            for dl_variable, dl_value in self.thy.assignment(rawmodel.thread_id):
-                dl_assignments.append(f"dl({str(dl_variable)},{dl_value})")
-            model.dl_assignments = dl_assignments  # DL assignments
-            # Prepare data for visualization
+        if self.dl_theory:
+            dl_assignments = [f"dl({str(dl_variable)},{dl_value})"
+                              for dl_variable, dl_value in self.thy.assignment(rawmodel.thread_id)]
+            model.dl_assignments = dl_assignments
             model.to_visualized = model.flight_path_fact_format + " ".join([i + '.' for i in model.dl_assignments])
-
         return model
 
 # Utility function to solve a Clingo program with additional facts
@@ -237,7 +197,7 @@ def VertiportConstraintSchedule():
     best_model = GetBestModelProfit(models)
     return best_model
 
-# Switching trajectory approach
+# Switching trajectory approach 1
 def SwitchingTrajectory():
     # Initial solution
     s = Schedule(time_limit=30
@@ -260,12 +220,13 @@ def SwitchingTrajectory():
     stop = False
     # Switching logic
     answer_set = best_model.flight_path_fact_format
+    print(answer_set)
     print("start switching!")
     previous_min_time = ""
     previous_max_time = ""
     while stop == False:
         sw = Schedule(time_limit=30
-                      , encoding='encoding/solution.lp'
+                      , encoding='encoding/swap0.1.lp'
                       , network='instances/network_NY_0.lp'
                       , heuristic=False
                       , choose_heu=None
@@ -273,28 +234,38 @@ def SwitchingTrajectory():
                       )
         model = sw.Solving(fact_load=answer_set)
         model_after_switch = model[0]
-        # Extract min_time and max_time
-        min_time = int(re.search(r"min_time\((\d+)\)", model_after_switch.output).group(1))
-        max_time = int(re.search(r"max_time\((\d+)\)", model_after_switch.output).group(1))
+        # Extract d and d_prime
+        mixed_best_matches = re.findall(r"mixed_best\(([^,]+),([^,]+),", model_after_switch.all_atoms)
+        if mixed_best_matches:
+            d, d_prime = mixed_best_matches[0]
+        else:
+            max_time_matches = re.findall(r"max_time\((\d+)", model_after_switch.all_atoms)
+            if max_time_matches:
+                print("max_time matches found:", max_time_matches)
+            else:
+                print("No mixed_best or max_time matches found.")
+                stop = True
+                break
+            break
         print(f"previous min time agent {previous_min_time} and previous max time agent {previous_max_time}")
-        if (min_time, max_time) == (previous_min_time, previous_max_time) or (max_time, min_time) == (previous_min_time, previous_max_time):
+        if (d, d_prime) == (previous_min_time, previous_max_time) or (d_prime, d) == (previous_min_time, previous_max_time):
             stop = True
-        print(f"min time agent {min_time} and max time agent {max_time}")
+        print(f"empty_flights: ", re.findall(r"wasted\([^)]+\)", model_after_switch.all_atoms))
+        print(f"min time agent {d} and max time agent {d_prime}")
+        pattern_flight_of_agent_switch = re.compile(rf"as\(({str(d)}|{str(d_prime)}),")
+        print([match.group(0) for match in re.finditer(rf"total_time_need\(({previous_min_time}|{previous_max_time}),[^)]+\)", model_after_switch.all_atoms)])
         print("flight path before swap:")
-        pattern_min_time = re.compile(rf"as\({str(min_time)},")
-        pattern_max_time = re.compile(rf"as\({str(max_time)},")
-        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_min_time.match(f)])))
-        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_max_time.match(f)])))
-        print(f"best cuts: ", re.findall(r"mixed_best\([^)]+\)", model_after_switch.output))
-        
-        previous_min_time = min_time
-        previous_max_time = max_time
+        print(". ".join([atom for atom in model_after_switch.all_atoms.split() if pattern_flight_of_agent_switch.match(atom)]))
+        print([match.group(0) for match in re.finditer(rf"total_time_need\(({d}|{d_prime}),[^)]+\)", model_after_switch.all_atoms)])
+        print(f"best cuts: ", re.findall(r"mixed_best\([^)]+\)", model_after_switch.all_atoms))
+        previous_min_time = d
+        previous_max_time = d_prime
         answer_set = model_after_switch.flight_path_fact_format
         print("flight path after swap:")
-        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_min_time.match(f)])))
-        print(ClingoSolver(prg_path="sort_traj.lp", facts=" ".join([f for f in answer_set.split() if pattern_max_time.match(f)])))
-        print(f"solution time: ", re.findall(r"solution_time\([^)]+\)", model_after_switch.output))
-    print(f"total time needed: ", re.findall(r"total_time_need\([^)]+\)", model_after_switch.output))
+        print(". ".join([atom for atom in model_after_switch.all_atoms.split() if pattern_flight_of_agent_switch.match(atom)]))
+        print(f"solution time: ", re.findall(r"solution_time\([^)]+\)", model_after_switch.all_atoms))
+        print(answer_set)
+    print(f"total time needed: ", re.findall(r"total_time_need\([^)]+\)", model_after_switch.all_atoms))
 
     # Final scheduling with time constraints
     dl = Schedule(time_limit=30

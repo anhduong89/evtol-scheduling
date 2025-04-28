@@ -29,9 +29,9 @@ distance_time(X - Y) :- X = #max{T : flight_time_need(_, T)}, Y = #min{T : fligh
 
 distance_charge(X - Y) :- X = #max{T : charge_time_need(_, T)}, Y = #min{T : charge_time_need(_, T)}.
 
-solution_time(X) :- X = #sum{FT : flight_time_need(_, FT)}.
+solution_time(X) :- X = #sum{FT,D : flight_time_need(D, FT)}.
 
-solution_charge(X) :- X = #sum{FT : charge_time_need(_, FT)}.
+solution_charge(X) :- X = #sum{FT,D : charge_time_need(D, FT)}.
 
 
 min_time(D) :-  agent(D), total_time_need(D, X),  X = #min{T : total_time_need(_, T)}. 
@@ -39,8 +39,8 @@ max_time(D) :-  agent(D), total_time_need(D, X),  X = #max{T : total_time_need(_
 
 % flight time and charging time until step S
 flight_time_s(D, S, FT+CT) :- agent(D), step(D, S), 
-                           FT = #sum{T, S': flight_time(E, T), as(D, E, _, S'), S' <= S },
-                           CT = #sum{T, S': charge_time(E, T), as(D, E, _, S'), 1 < S' <= S }.
+                           FT = #sum{T, S': flight_time(E, T), as(D, E, _, S'), S' <= S},
+                           CT = #sum{T, S': charge_time(E, T), as(D, E, _, S'), 1 < S' <= S}.
 
 charging_time(CT) :- CT = #sum{T, E : charge_time(E, T)}.
 
@@ -59,9 +59,10 @@ mixed(D, D', L, S, S', FT1 + NFT2, FT2 + NFT1, X) :- shared(D, D', L, S, S', FT1
 mixed(D, D', L, S, S', FT1 + NFT2, FT2 + NFT1, -X) :- shared(D, D', L, S, S', FT1, FT2 , NFT1,  NFT2), X = FT1 + NFT2 - FT2 - NFT1, X < 0.
 
 % cut at segment that could provide better trajectory
-mixed_best_set(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), Z = #min{Z' :  mixed(_, _, _, _, _, _, _, Z')}. 
+% mixed_best_set(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), Z = #min{Z' :  mixed(_, _, _, _, _, _, _, Z')}. 
+mixed_best_set(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), X<180, Y<180. 
 
-1 { mixed_best(D, D', L, S, S', X, Y) : mixed_best_set(D, D', L, S, S', X, Y) } 1.
+1 { mixed_best(D, D', L, S, S', X, Y) : mixed_best_set(D, D', L, S, S', X, Y);no_swap } 1.
 
 nas(D, E, W, X) :- as(D, E, W, X), min_time(D0), max_time(D1), D != D0, D!= D1.
 
@@ -73,8 +74,11 @@ nas(D, E, W, S) :- max_time(D), as(D, E, W, S), mixed_best(_, D, _, _, S2, _, _)
 
 nas(D, E, W, S - S1 + S2) :- max_time(D), as(D', E, W, S), mixed_best(D', D, _, S1, S2, _, _), S > S1.
 
+
+
+
 #show.
-#show as(D,E,W,X): nas(D,E,W,X).
+% #show as(D,E,W,X): nas(D,E,W,X).
 % #show nas/4.
 #show min_time/1.
 #show max_time/1.
@@ -83,3 +87,7 @@ nas(D, E, W, S - S1 + S2) :- max_time(D), as(D', E, W, S), mixed_best(D', D, _, 
 % #show shared/9.
 #show total_time_need/2.
 #show solution_time/1.
+% #show mixed/8.
+#show total_time_need_after_switch(D,FT+CT) : D=(Dmin;Dmax), min_time(Dmin), max_time(Dmax),
+                           FT = #sum{T, S': flight_time(E, T), nas(D, E, _, S')},
+                           CT = #sum{T, S': charge_time(E, T), nas(D, E, _, S'), 1 < S'}.
