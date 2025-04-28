@@ -1,19 +1,9 @@
-% #show. 
-% #show total/2. 
-% #show wasted/1. 
-% #show flight_time_need/2. 
-% #show charge_time_need/2. 
-% #show total_time_need/2. 
-% #show distance_time/1. 
-% #show distance_charge/1. 
 
 
 edge(E) :- as(_,E,_,_). 
 agent(D) :- as(D,_,_,_). 
 step(D,S) :- as(D,_,_,S). 
 
-
-% agent(0..33). 
 
 total(T, E) :- edge(E), T = #sum{W,D,X : as(D,E,W,X)}.
 
@@ -72,11 +62,10 @@ mixed_best_set(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), X<180,
 
 :- mixed_best(D,D0,_,_,_,_,_), mixed_best(D',D1,_,_,_,_,_), D = D', D0!=D1.
 :- mixed_best(D0,D,_,_,_,_,_), mixed_best(D1,D',_,_,_,_,_), D = D', D0!=D1.
-% :- mixed_best(D,D',_,_,_,_,_), mixed_best(D0,D1,_,_,_,_,_), D = D0, D'=D1.
 
-nas(D, E, W, X) :- as(D, E, W, X), mixed_best(D1,D0,_,_,_,_,_), max_time(D0), D != D0, D!= D1, not no_swap.
+nas(D, E, W, X) :- as(D, E, W, X), mixed_best(D1,D0,_,_,_,_,_), D != D0, D!= D1.
 
-nas(D,E,W,X) :- as(D,E,W,X), no_swap.
+nas(D,E,W,X) :- as(D,E,W,X), not mixed_best(_,_,_,_,_,_,_).
 
 nas(D, E, W, S) :- as(D, E, W, S), mixed_best(D, _, _, S1, _, _, _), S <= S1.
 

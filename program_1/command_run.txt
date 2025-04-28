@@ -8,4 +8,4 @@ clingo output_3.lp test.lp
 
 clingo sort_traj.lp --out-ifs=\\n --out-atomf=%s.
 
-clingo encoding/swap0.1.lp instances/network_NY_0.lp test_1.lp -c horizon=180 --out-ifs=\\n --out-atomf=%s.
+clingo encoding/swap0.1.lp instances/network_NY_0.lp test_1.lp -c horizon=180 --opt-mode=enum,-10 --out-ifs=\\n --out-atomf=%s.

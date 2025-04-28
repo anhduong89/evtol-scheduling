@@ -235,37 +235,15 @@ def SwitchingTrajectory():
         model = sw.Solving(fact_load=answer_set)
         model_after_switch = model[0]
         # Extract d and d_prime
-        mixed_best_matches = re.findall(r"mixed_best\(([^,]+),([^,]+),", model_after_switch.all_atoms)
-        if mixed_best_matches:
-            d, d_prime = mixed_best_matches[0]
-        else:
-            max_time_matches = re.findall(r"max_time\((\d+)", model_after_switch.all_atoms)
-            if max_time_matches:
-                print("max_time matches found:", max_time_matches)
-            else:
-                print("No mixed_best or max_time matches found.")
-                stop = True
-                break
-            break
-        print(f"previous min time agent {previous_min_time} and previous max time agent {previous_max_time}")
-        if (d, d_prime) == (previous_min_time, previous_max_time) or (d_prime, d) == (previous_min_time, previous_max_time):
-            stop = True
+        print("mixed best: ", re.findall(r"mixed_best\(([^,]+),([^,]+),.*?\)\s", model_after_switch.all_atoms))
         print(f"empty_flights: ", re.findall(r"wasted\([^)]+\)", model_after_switch.all_atoms))
-        print(f"min time agent {d} and max time agent {d_prime}")
-        pattern_flight_of_agent_switch = re.compile(rf"as\(({str(d)}|{str(d_prime)}),")
-        print([match.group(0) for match in re.finditer(rf"total_time_need\(({previous_min_time}|{previous_max_time}),[^)]+\)", model_after_switch.all_atoms)])
-        print("flight path before swap:")
-        print(". ".join([atom for atom in model_after_switch.all_atoms.split() if pattern_flight_of_agent_switch.match(atom)]))
-        print([match.group(0) for match in re.finditer(rf"total_time_need\(({d}|{d_prime}),[^)]+\)", model_after_switch.all_atoms)])
-        print(f"best cuts: ", re.findall(r"mixed_best\([^)]+\)", model_after_switch.all_atoms))
-        previous_min_time = d
-        previous_max_time = d_prime
+        print(f"flight path before swap: \n{answer_set}")
+
         answer_set = model_after_switch.flight_path_fact_format
-        print("flight path after swap:")
-        print(". ".join([atom for atom in model_after_switch.all_atoms.split() if pattern_flight_of_agent_switch.match(atom)]))
+        print(f"flight path after swap: \n{answer_set}")
+
         print(f"solution time: ", re.findall(r"solution_time\([^)]+\)", model_after_switch.all_atoms))
-        print(answer_set)
-    print(f"total time needed: ", re.findall(r"total_time_need\([^)]+\)", model_after_switch.all_atoms))
+        stop = True
 
     # Final scheduling with time constraints
     dl = Schedule(time_limit=30
