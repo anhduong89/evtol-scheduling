@@ -1,11 +1,3 @@
-clingo encoding/s.lp instances/network_NY_0.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --out-ifs=\\n --out-atomf=%s.
+clingo encoding/s.lp instances/network_NY_0.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --outf=1
 
-clingo encoding/solution.lp instances/network_NY_0.lp test_1.lp --out-ifs=\\n --out-atomf=%s.
-
-clingo-dl encoding/time_0.lp output_3.lp
-
-clingo output_3.lp test.lp
-
-clingo sort_traj.lp --out-ifs=\\n --out-atomf=%s.
-
-clingo encoding/swap0.1.lp instances/network_NY_0.lp test_1.lp -c horizon=180 --opt-mode=enum,-10 --out-ifs=\\n --out-atomf=%s.
+clingo encoding/swap0.1.lp instances/network_NY_0.lp test_1.lp -c horizon=180 --time-limit=8 --outf=1

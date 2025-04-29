@@ -200,10 +200,10 @@ def VertiportConstraintSchedule():
 # Switching trajectory approach 1
 def SwitchingTrajectory():
     # Initial solution
+    print('=========== step 1: assign trajectory allowing operation time > horizon, prioritizing serving all customers:')
     s = Schedule(time_limit=30
                  , start_segment=1
                  , max_segment=13
-                 , horizon=180
                  , encoding='encoding/s.lp'
                  , network='instances/network_NY_0.lp'
                  , heuristic=True
@@ -221,13 +221,12 @@ def SwitchingTrajectory():
     # Switching logic
     answer_set = best_model.flight_path_fact_format
     print(answer_set)
-    print("start switching!")
-    previous_min_time = ""
-    previous_max_time = ""
+    print("========== step 2: start switching trajectory to constraint operation time <= horizon")
     while stop == False:
-        sw = Schedule(time_limit=30
+        sw = Schedule(time_limit=8
                       , encoding='encoding/swap0.1.lp'
                       , network='instances/network_NY_0.lp'
+                      , horizon=180
                       , heuristic=False
                       , choose_heu=None
                       , choose_opt=None
@@ -244,21 +243,20 @@ def SwitchingTrajectory():
 
         print(f"solution time: ", re.findall(r"solution_time\([^)]+\)", model_after_switch.all_atoms))
         stop = True
-
+    print("========== step 3: assign time using clingo-dl")
     # Final scheduling with time constraints
     dl = Schedule(time_limit=30
-                  , encoding='encoding/time_0.lp'
+                  , encoding='encoding/time1.lp'
                   , network='instances/network_NY_0.lp'
                   , heuristic=False
                   , dl_theory=True
                   , horizon=None
-                  , max_segment=None
+                  , max_segment=13
                   )
     time = dl.Solving(fact_load=answer_set)
-    return time[0].to_visualized
 
 # Main execution
 if __name__ == "__main__":
     time = SwitchingTrajectory()
-    with open("results/trajectories.lp", "w") as file:
-        file.write(time)
+    # with open("results/trajectories.lp", "w") as file:
+    #     file.write(time)

@@ -58,14 +58,16 @@ mixed(D, D', L, S, S', FT1 + NFT2, FT2 + NFT1, -X) :- shared(D, D', L, S, S', FT
 mixed_best_set(D, D', L, S, S', X, Y) :- mixed(D, D', L, S, S', X, Y, Z), X<180, Y<180. 
 
 
-{ mixed_best(D, D', L, S, S', X, Y) : mixed_best_set(D, D', L, S, S', X, Y) } C :- number_of_agent_need_switch(C).
+C { mixed_best(D, D', L, S, S', X, Y) : mixed_best_set(D, D', L, S, S', X, Y) } C :- number_of_agent_need_switch(C).
 
-:- mixed_best(D,D0,_,_,_,_,_), mixed_best(D',D1,_,_,_,_,_), D = D', D0!=D1.
-:- mixed_best(D0,D,_,_,_,_,_), mixed_best(D1,D',_,_,_,_,_), D = D', D0!=D1.
+:- mixed_best(D,D0,_,_,_,_,_), mixed_best(D,D1,_,_,_,_,_), D0!=D1.
+:- mixed_best(D0,D,_,_,_,_,_), mixed_best(D1,D,_,_,_,_,_), D0!=D1.
 
-nas(D, E, W, X) :- as(D, E, W, X), mixed_best(D1,D0,_,_,_,_,_), D != D0, D!= D1.
 
-nas(D,E,W,X) :- as(D,E,W,X), not mixed_best(_,_,_,_,_,_,_).
+no_swap(D) :- mixed_best(D',_,_,_,_,_,_), agent(D), D!=D'.
+no_swap(D) :- mixed_best(_,D',_,_,_,_,_), agent(D), D!=D'.
+
+nas(D,E,W,S) :- no_swap(D), as(D,E,W,S).
 
 nas(D, E, W, S) :- as(D, E, W, S), mixed_best(D, _, _, S1, _, _, _), S <= S1.
 
@@ -75,17 +77,15 @@ nas(D, E, W, S) :- as(D, E, W, S), mixed_best(_, D, _, _, S2, _, _), S <= S2.
 
 nas(D, E, W, S - S1 + S2) :- as(D', E, W, S), mixed_best(D', D, _, S1, S2, _, _), S > S1.
 
-% total_time_need_after_switch(D,FT+CT) :- D=(Dmin;Dmax), mixed_best(Dmin,Dmax,_,_,_,_,_),
-%                            FT = #sum{T, S': flight_time(E, T), nas(D, E, _, S')},
-%                            CT = #sum{T, S': charge_time(E, T), nas(D, E, _, S'), 1 < S'}.
 
 
-#maximize { 1,D,D' : mixed_best(D,D',_,_,_,_,_) }.
+
+% #maximize { 1,D,D' : mixed_best(D,D',_,_,_,_,_) }.
 
 #show.
 #show as(D,E,W,X): nas(D,E,W,X).
+
 % #show nas/4.
-#show no_swap/0.
 #show mixed_best/7.
 % #show mixed_best_set/7.
 #show number_of_agent_need_switch/1.
