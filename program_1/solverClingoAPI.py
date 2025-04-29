@@ -246,7 +246,7 @@ def SwitchingTrajectory():
     print("========== step 3: assign time using clingo-dl")
     # Final scheduling with time constraints
     dl = Schedule(time_limit=30
-                  , encoding='encoding/time1.lp'
+                  , encoding='encoding/time0.lp'
                   , network='instances/network_NY_0.lp'
                   , heuristic=False
                   , dl_theory=True

@@ -1,12 +1,12 @@
 
 #include "instances/network_NY_0.lp".
-#const horizon=300.
+#const horizon=180.
 
 max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
 % % constraint
 % % :- (R+1) #sum{W,D,X:as(D,E,W,X)}, edge(E), request(_,E,R).
 
-% :- as(_,E,W,_), W > 0, edge_loop(E).
+:- as(_,E,W,_), W > 0, edge_loop(E).
 
 % % % start vertiport as specicfied
 % % :- init_loc(D,V), as(D,(V',_),_,1), V!=V'.
