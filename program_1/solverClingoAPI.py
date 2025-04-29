@@ -236,7 +236,6 @@ def SwitchingTrajectory():
         # Extract d and d_prime
         print("mixed best: ", re.findall(r"mixed_best\(([^,]+),([^,]+),.*?\)\s", model_after_switch.all_atoms))
         print(f"empty_flights: ", re.findall(r"wasted\([^)]+\)", model_after_switch.all_atoms))
-        print(f"flight path before swap: \n{answer_set}")
 
         answer_set = model_after_switch.flight_path_fact_format
         print(f"flight path after swap: \n{answer_set}")
