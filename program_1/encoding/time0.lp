@@ -1,14 +1,17 @@
 
-max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}. 
-% constraint
-:- (R+1) #sum{W,D,X:as(D,E,W,X)}, edge(E), request(_,E,R).
+#include "instances/network_NY_0.lp".
+#const horizon=300.
 
-:- as(_,E,W,_), W > 0, edge_loop(E).
+max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
+% % constraint
+% % :- (R+1) #sum{W,D,X:as(D,E,W,X)}, edge(E), request(_,E,R).
 
-% start vertiport as specicfied
-:- init_loc(D,V), as(D,(V',_),_,1), V!=V'.
+% :- as(_,E,W,_), W > 0, edge_loop(E).
 
-% consecutive trips need to be connected
+% % % start vertiport as specicfied
+% % :- init_loc(D,V), as(D,(V',_),_,1), V!=V'.
+
+% % consecutive trips need to be connected
 :-as(D,(V,V1),_,X),as(D,(V2,V3),_,X+1),V1!=V2.
 
 % ----- TIME SCHEDULE WITH DIFFERENT CONSTRAINT
@@ -21,3 +24,7 @@ max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
 &diff {arrival(D,E,X) - start(D,E,X)} = FT :- flight_time(E,FT), as(D,E,_,X).
 
 &diff {start(D,E',X+1) - arrival(D,E,X)} >= CT :- charge_time(E',CT), as(D,E,_,X), as(D,E',_,X+1).
+
+
+#show as/4.
+#show dl/2.

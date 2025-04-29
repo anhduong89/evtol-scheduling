@@ -63,9 +63,11 @@ C { mixed_best(D, D', L, S, S', X, Y) : mixed_best_set(D, D', L, S, S', X, Y) } 
 :- mixed_best(D,D0,_,_,_,_,_), mixed_best(D,D1,_,_,_,_,_), D0!=D1.
 :- mixed_best(D0,D,_,_,_,_,_), mixed_best(D1,D,_,_,_,_,_), D0!=D1.
 :- mixed_best(D',D,L,_,_,_,_), mixed_best(D',D,L',_,_,_,_), L!=L'.
+:- mixed_best(D',D,L,S,_,_,_), mixed_best(D',D,L,S',_,_,_), S!=S'.
+:- mixed_best(D',D,L,S,S0,_,_), mixed_best(D',D,L,S,S1,_,_), S0!=S1.
 
-no_swap(D) :- mixed_best(D',_,_,_,_,_,_), agent(D), D!=D'.
-no_swap(D) :- mixed_best(_,D',_,_,_,_,_), agent(D), D!=D'.
+no_swap(D) :- not mixed_best(D,_,_,_,_,_,_), agent_to_switch(D).
+no_swap(D) :- not mixed_best(_,D,_,_,_,_,_), agent_need_switch(D).
 
 nas(D,E,W,S) :- no_swap(D), as(D,E,W,S).
 
@@ -80,13 +82,15 @@ nas(D, E, W, S - S1 + S2) :- as(D', E, W, S), mixed_best(D', D, _, S1, S2, _, _)
 
 
 
-#maximize { 1,D,D' : mixed_best(D,D',_,_,_,_,_) }.
+% #maximize { 1,D,D' : mixed_best(D,D',_,_,_,_,_) }.
 
 #show.
-% #show as(D,E,W,X): nas(D,E,W,X).
-
+% #show as(D,E,W,X): as(D,E,W,X), D=(31;16).
+#show as(D,E,W,X): nas(D,E,W,X).
 % #show nas/4.
-#show mixed_best/7.
+% #show mixed(A,B,C,D,E,F,G,H) : mixed(A,B,C,D,E,F,G,H), A=31, B=16.
+#show mixed_best(A,B,C,D,E,F,G) : mixed_best(A,B,C,D,E,F,G).
 % #show mixed_best_set/7.
 #show number_of_agent_need_switch/1.
 % #show shared/9.
+#show no_swap/1.

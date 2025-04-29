@@ -43,7 +43,7 @@ def parse_time_data(line):
     return None
 
 def visualize():
-    start_times, arrival_times, flights, gates = [], [], [], []
+    start_times, arrival_times, flights, gates = {}, {}, [], []
     time_data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'results', 'trajectories.lp')
     try:
         with open(time_data_path, 'r') as file:
@@ -54,12 +54,9 @@ def visualize():
                     gate_data = parse_gate_assign_data(line)
                     if time_data:
                         data_type, agent_id, segment_id, time = time_data
-                        while len(start_times) <= agent_id:
-                            start_times.append([])
-                            arrival_times.append([])
-                        while len(start_times[agent_id]) <= segment_id:
-                            start_times[agent_id].append(None)
-                            arrival_times[agent_id].append(None)
+                        if agent_id not in start_times:
+                            start_times[agent_id] = {}
+                            arrival_times[agent_id] = {}
                         if data_type == 'start':
                             start_times[agent_id][segment_id] = time
                         elif data_type == 'arrival':
@@ -72,13 +69,26 @@ def visualize():
         print(f"Error: Could not find file {time_data_path}")
         exit(1)
 
+    # Adjust arrival_times and start_times for visualization
+    add = {i: i * 4 for i in range(max(max(agent.keys()) for agent in arrival_times.values()) + 1)}
+    arrival_times_true = arrival_times
+    arrival_times = {
+        agent: {seg: time + add[seg] if time is not None else None for seg, time in segments.items()}
+        for agent, segments in arrival_times.items()
+    }
+    start_times_true = start_times
+    start_times = {
+        agent: {seg: time + add[seg] if time is not None else None for seg, time in segments.items()}
+        for agent, segments in start_times.items()
+    }
+
     agent_flights = {}
     for agent, (origin, destination), passengers, segment in flights:
         agent_flights.setdefault(agent, []).append((segment, origin, destination, passengers))
 
     agent_gates = {}
-    for agent_id, segment, gate_id, destination in gates:
-        agent_gates.setdefault(agent_id, {}).setdefault(segment, []).append((gate_id, destination))
+    # for agent_id, segment, gate_id, destination in gates:
+    #     agent_gates.setdefault(agent_id, {}).setdefault(segment, []).append((gate_id, destination))
 
     output_dir = os.path.dirname(__file__)
     if not os.path.exists(output_dir):
@@ -113,10 +123,10 @@ def visualize():
             if seg_num == 1:
                 pos[src_node] = (0, y_pos)
                 pos[depart_node] = (0, y_pos)
-                pos[dst_node] = (arrival_times[agent][seg_num] / 5, y_pos)
+                pos[dst_node] = ((arrival_times[agent][seg_num] / 5) if arrival_times[agent][seg_num] is not None else 0, y_pos)
             else:
                 pos[src_node] = (arrival_times[agent][seg_num - 1] / 5, y_pos)
-                pos[depart_node] = (start_times[agent][seg_num] / 5, y_pos)
+                pos[depart_node] = ((start_times[agent][seg_num] / 5) if start_times[agent][seg_num] is not None else 0, y_pos)
                 pos[dst_node] = (arrival_times[agent][seg_num] / 5, y_pos)
 
             G.add_node(src_node)

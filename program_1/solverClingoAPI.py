@@ -230,6 +230,7 @@ def SwitchingTrajectory():
                       , heuristic=False
                       , choose_heu=None
                       , choose_opt=None
+                      , dl_theory=False
                       )
         model = sw.Solving(fact_load=answer_set)
         model_after_switch = model[0]
@@ -253,9 +254,11 @@ def SwitchingTrajectory():
                   , max_segment=13
                   )
     time = dl.Solving(fact_load=answer_set)
+    return time[0].to_visualized
 
 # Main execution
 if __name__ == "__main__":
     time = SwitchingTrajectory()
+    print(time)
     # with open("results/trajectories.lp", "w") as file:
     #     file.write(time)
