@@ -55,8 +55,11 @@ def visualize():
                     if time_data:
                         data_type, agent_id, segment_id, time = time_data
                         if agent_id not in start_times:
-                            start_times[agent_id] = {}
-                            arrival_times[agent_id] = {}
+                            start_times[agent_id] = []
+                            arrival_times[agent_id] = []
+                        while len(start_times[agent_id]) <= segment_id:
+                            start_times[agent_id].append(None)
+                            arrival_times[agent_id].append(None)
                         if data_type == 'start':
                             start_times[agent_id][segment_id] = time
                         elif data_type == 'arrival':
@@ -70,15 +73,16 @@ def visualize():
         exit(1)
 
     # Adjust arrival_times and start_times for visualization
-    add = {i: i * 4 for i in range(max(max(agent.keys()) for agent in arrival_times.values()) + 1)}
+    max_segments = max(len(segments) for segments in arrival_times.values())
+    add = [i * 1 for i in range(max_segments)]
     arrival_times_true = arrival_times
     arrival_times = {
-        agent: {seg: time + add[seg] if time is not None else None for seg, time in segments.items()}
+        agent: [time + add[i] if time is not None else None for i, time in enumerate(segments)]
         for agent, segments in arrival_times.items()
     }
     start_times_true = start_times
     start_times = {
-        agent: {seg: time + add[seg] if time is not None else None for seg, time in segments.items()}
+        agent: [time + add[i] if time is not None else None for i, time in enumerate(segments)]
         for agent, segments in start_times.items()
     }
 
@@ -100,11 +104,18 @@ def visualize():
 
     pos = {}
     y_spacing = 1.0
-    add = [i * 4 for i in range(len(arrival_times[0]))]
-    arrival_times_true = arrival_times
-    arrival_times = [[x + y if x is not None else None for x, y in zip(a, add)] for a in arrival_times]
-    start_times_true = start_times
-    start_times = [[x + y if x is not None else None for x, y in zip(a, add)] for a in start_times]
+    # max_segments = max(len(segments) for segments in arrival_times.values())
+    # add = [i * 4 for i in range(max_segments)]
+    # arrival_times_true = arrival_times
+    # arrival_times = {
+    #     agent: [x + add[i] if x is not None else None for i, x in enumerate(segments)]
+    #     for agent, segments in arrival_times.items()
+    # }
+    # start_times_true = start_times
+    # start_times = {
+    #     agent: [x + add[i] if x is not None else None for i, x in enumerate(segments)]
+    #     for agent, segments in start_times.items()
+    # }
 
     for agent, segments in agent_flights.items():
         y_pos = -agent * y_spacing
@@ -115,7 +126,14 @@ def visualize():
         G.add_node(agent_label_node)
         G.nodes[agent_label_node]['label'] = f"Agent {agent}:"
 
-        for seg_num, origin, destination, passengers in sorted(segments, key=lambda x: x[0]):
+        segments = sorted(segments, key=lambda x: x[0])
+        seen = set()
+        unique_segments = []
+        for seg in segments:
+            if seg[1] != seg[2]:  # Ensure item 2 and item 3 are not the same
+                unique_segments.append(seg)
+        segments = unique_segments
+        for seg_num, origin, destination, passengers in segments:
             src_node = f"{origin}_{agent}_{seg_num}"
             depart_node = f"{origin}_{agent}_{seg_num}_depart"
             dst_node = f"{destination}_{agent}_{seg_num}"
@@ -139,7 +157,7 @@ def visualize():
             nx.draw_networkx_edges(G, pos, edgelist=[(depart_node, dst_node)], style='solid', edge_color=edge_color, width=0.5)
 
             # Add edge label for depart_node to dst_node under the edge
-            edge_label = f"S{seg_num}\nP={passengers}"
+            edge_label = f"\nP={passengers}"
             nx.draw_networkx_edge_labels(
                 G, pos, edge_labels={(depart_node, dst_node): edge_label}, font_size=7, font_color='black', label_pos=0.5, bbox=dict(alpha=0)
             )

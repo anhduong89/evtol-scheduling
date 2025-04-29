@@ -25,6 +25,6 @@ max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
 
 &diff {start(D,E',X+1) - arrival(D,E,X)} >= CT :- charge_time(E',CT), as(D,E,_,X), as(D,E',_,X+1).
 
+#show.
+% #show as/4.
 
-#show as/4.
-#show dl/2.

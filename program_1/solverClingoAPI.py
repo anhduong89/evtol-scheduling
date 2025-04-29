@@ -20,15 +20,15 @@ def on_model(m):
 LINE = "---------------------------------------------------------------------"
 
 # Uncommented argument parsing section for potential CLI usage
-# parser = argparse.ArgumentParser(description='Solver for eVTOL scheduling.')
-# parser.add_argument('--n_rq', type=int, default = 30, help='Number of requests')
-# parser.add_argument('--n_agents', type=int, default = 34, help='Number of agents')
-# parser.add_argument('--max_segment', type=int, default = 11, help='Maximum segment')
-# parser.add_argument('--horizon', type=int, default = 180, help='Horizon')
-# parser.add_argument('--time_limit', type=int, default = 30, help='Time limit')
-# parser.add_argument('--seed', type=int, default = 1, help='seed for random initial location')
-# parser.add_argument('--vertiport_cap', type=int, default = 6, help='vertiport capacity')
-# args = parser.parse_args()
+parser = argparse.ArgumentParser(description='Solver for eVTOL scheduling.')
+parser.add_argument('--n_rq', type=int, default = 30, help='Number of requests')
+parser.add_argument('--n_agents', type=int, default = 34, help='Number of agents')
+parser.add_argument('--max_segment', type=int, default = 13, help='Maximum segment')
+parser.add_argument('--horizon', type=int, default = 180, help='Horizon')
+parser.add_argument('--time_limit', type=int, default = 30, help='Time limit')
+parser.add_argument('--seed', type=int, default = 1, help='seed for random initial location')
+parser.add_argument('--vertiport_cap', type=int, default = 6, help='vertiport capacity')
+args = parser.parse_args()
 
 # Estimate the minimum number of agents and segments required
 min_agents, min_segments = EstimateMinAgents(horizon=180, b_init=60, demand_cust=30, aircraft_capacity=4)
@@ -203,14 +203,14 @@ def SwitchingTrajectory():
     print('=========== step 1: assign trajectory allowing operation time > horizon, prioritizing serving all customers:')
     s = Schedule(time_limit=30
                  , start_segment=1
-                 , max_segment=13
+                 , max_segment=args.max_segment
                  , encoding='encoding/s.lp'
                  , network='instances/network_NY_0.lp'
                  , heuristic=True
                  , choose_heu=None
                  , choose_opt=None
-                 , n_rq=30
-                 , n_agents=34
+                 , n_rq=args.n_rq
+                 , n_agents=args.n_agents
                  , seed_init=1
                  , seed_rq=1
                  , dl_theory=False
@@ -226,7 +226,7 @@ def SwitchingTrajectory():
         sw = Schedule(time_limit=8
                       , encoding='encoding/swap0.1.lp'
                       , network='instances/network_NY_0.lp'
-                      , horizon=180
+                      , horizon=args.horizon
                       , heuristic=False
                       , choose_heu=None
                       , choose_opt=None
@@ -250,8 +250,8 @@ def SwitchingTrajectory():
                   , network='instances/network_NY_0.lp'
                   , heuristic=False
                   , dl_theory=True
-                  , horizon=None
-                  , max_segment=13
+                  , horizon=180
+                  , max_segment=args.max_segment
                   )
     time = dl.Solving(fact_load=answer_set)
     return time[0].to_visualized
