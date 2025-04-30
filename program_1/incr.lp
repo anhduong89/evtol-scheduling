@@ -1,19 +1,23 @@
 #include <incmode>.
 
-
-#program base.
-
 #include "instances/network_NY.lp".
 #include "instances/init.lp".
 #include "instances/rq.lp".
 
-at(D, L, 1)      :- init_loc(D, L). 
 
-remain_cust(E, R, 1) :- request(_,E, R). 
+#program base.
 
-remain_loc(L, R, 1)  :- vertiport(L), R = #sum{P, L' : request(_, (L, L'), P)}. 
+
+at(D, L, 0)      :- init_loc(D, L). 
+
+remain_cust(E, R, 0) :- request(_,E, R). 
+
+remain_loc(L, R, 0)  :- vertiport(L), R = #sum{P, L' : request(_, (L, L'), P)}. 
 
 goal(E, 20) :- edge(E), not edge_loop(E).
+
+hold(E, 0) :- edge(E), goal(E, X), not edge_loop(E), remain_cust(E, Y, 0), Y <= X. 
+
 
 #program step(t).
 
@@ -21,7 +25,7 @@ time(t).
 
 % hold(E, t) :- edge(E), goal(E, X), remain_cust(E, Y, 1), Y < X.
 
-hold(E, t) :- edge(E), goal(E, X), remain_cust(E, Y, 1), t > 2. 
+hold(E, t) :- edge(E), goal(E, X), remain_cust(E, Y, t), Y <= X. 
 
 % -- assign edge to each segment
 1 {as(D,(L,L'),0..C,t) : edge((L,L'))} 1 :- agent(D), capacity(D,C), at(D, L, t-1).
@@ -51,10 +55,11 @@ assigned(L, t) :- vertiport(L), at(_, L, t-1), as(_, (L, L'), W, t), W > 0.
 
 % :- query(t), edge(E), goal(E, X), remain_cust(E, Y, t), Y > X.
  
-:- query(t), edge(E), not hold(E, t).
+:- query(t), edge(E), not edge_loop(E), not hold(E, t).
 
 % #show seq/1. 
 % #show as/4. 
 % #show remain_cust/3. 
 % #show remain_loc/3. 
 % #show time/1. 
+% #show goal/2.
