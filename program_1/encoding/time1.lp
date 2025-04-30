@@ -5,6 +5,7 @@
 ch_time(D,0,X) :- as(D,E,_,X), distance(E,0).
 
 
+
 % ----- TIME SCHEDULE WITH DIFFERENT CONSTRAINT
 % start time at initial vertiport = charge duration
 &diff {start(D,1)} = 0 :- as(D,_,_,1).
@@ -29,3 +30,4 @@ ch_time(D,0,X) :- as(D,E,_,X), distance(E,0).
 &diff {start(D,X+1) - arrival(D,X)} >= CT :- ch_time(D,CT,X+1), as(D,_,_,X), as(D,_,_,X+1).
 
 #show ch_time/3.
+

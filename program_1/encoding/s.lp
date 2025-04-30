@@ -1,7 +1,7 @@
 % ------ INSTANCES
 % #include "instances/network_NY_0.lp".
-#include "instances/init.lp".
-#include "instances/rq.lp".
+% #include "instances/init.lp".
+% #include "instances/rq.lp".
 
 max_seg(D,max_seg):-agent(D).
 seg(1..max_seg).

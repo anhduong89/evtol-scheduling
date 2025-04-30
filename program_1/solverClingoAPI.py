@@ -36,7 +36,7 @@ min_agents, min_segments = EstimateMinAgents(horizon=180, b_init=60, demand_cust
 # Class to handle scheduling logic
 class Schedule:
     def __init__(self, time_limit: int = 30, start_segment: int = 1, max_segment: int = 13, horizon: int = 180, 
-                 encoding: str = 'schedule.lp', network: str = None, heuristic: bool = False, 
+                 encoding: str = 'schedule.lp', network: str = None, init_path='instances/init.lp', rq_path ='instances/rq.lp', heuristic: bool = False, 
                  choose_heu: list = None, choose_opt: list = None, n_rq: int = None, n_agents: int = None, 
                  seed_init: int = None, seed_rq: int = 1, vert_cap: int = 12, dl_theory: bool = False):
         self.thy = ClingoDLTheory()
@@ -46,6 +46,8 @@ class Schedule:
         self.horizon = horizon
         self.encoding = encoding
         self.network = network
+        self.init = init_path
+        self.rq = rq_path
         self.seed_init = seed_init
         self.seed_rq = seed_rq
         self.control_par = ['-c', f'start_seg={self.start_segment}', '-t4']
@@ -72,6 +74,10 @@ class Schedule:
         if self.network:
             with open(self.network, 'r') as file:
                 prg += file.read()
+        with open(self.init, 'r')as file:
+            prg += file.read()
+        with open(self.rq, 'r')as file:
+            prg += file.read()
         if self.choose_opt:
             for opt in self.choose_opt:
                 with open(f'opt_heu/opt_{opt}.lp', 'r') as file:
