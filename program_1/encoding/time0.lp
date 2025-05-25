@@ -1,6 +1,6 @@
 
 #include "instances/network_NY_0.lp".
-#const horizon=180.
+
 
 max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
 % % constraint
@@ -19,7 +19,7 @@ max_seg(D, M) :- as(D, _, _, _), M = #max{X : as(D, _, _, X)}.
 
 &diff {start(D,E,1)} = 0 :- as(D,E,_,1).
 
-&diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
+% &diff {arrival(D,E,M)} <= horizon :- as(D,E,_,M), max_seg(D,M).
 
 &diff {arrival(D,E,X) - start(D,E,X)} = FT :- flight_time(E,FT), as(D,E,_,X).
 

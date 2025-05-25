@@ -91,8 +91,8 @@ def visualize():
         agent_flights.setdefault(agent, []).append((segment, origin, destination, passengers))
 
     agent_gates = {}
-    # for agent_id, segment, gate_id, destination in gates:
-    #     agent_gates.setdefault(agent_id, {}).setdefault(segment, []).append((gate_id, destination))
+    for agent_id, segment, gate_id, destination in gates:
+        agent_gates.setdefault(agent_id, {}).setdefault(segment, []).append((gate_id, destination))
 
     output_dir = os.path.dirname(__file__)
     if not os.path.exists(output_dir):
@@ -184,7 +184,7 @@ def visualize():
     # Draw nodes and labels
     nx.draw_networkx_nodes(G, pos, node_size=5, node_color='lightblue')
     labels = {node: G.nodes[node]['label'] for node in G.nodes()}
-    nx.draw_networkx_labels(G, pos, labels=labels, font_size=11, verticalalignment='bottom')
+    nx.draw_networkx_labels(G, pos, labels=labels, font_size=9, verticalalignment='bottom')
 
     plt.title("Sequential Flight Segments for All Agents")
     plt.axis('off')

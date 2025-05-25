@@ -1,8 +1,0 @@
-% schedule assign customer flight
-clingo encoding/s.lp instances/network_NY_0.lp -c start_seg=1 -c max_seg=13 -c horizon=180 --heuristic=Domain -t4 --outf=1
-
-% switching
-clingo encoding/swap0.1.lp instances/network_NY_0.lp test_1.lp -c horizon=180 --time-limit=8 --out-ifs=\\n --out-atomf=%s.
-
-% assign time
-clingo-dl encoding/time0.lp test_2.lp --out-ifs=\\n --out-atomf=%s.

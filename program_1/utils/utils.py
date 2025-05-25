@@ -18,42 +18,44 @@ velocity = 100 # mph
 e_dischg = 4 # kWh/mile
 e_max = 100 # kWh
 g_i=250 # kW
-city_names = ["lgr", "jfk", "rep", "lima", "dtm", "ttb", "nli"]
+# city_names = ["lgr", "jfk", "rep", "lima", "dtm", "ttb", "nli"]
+
+# dist = np.array([
+#     [ 0., 10.68, 24.32, 40.51,  8.876, 11.08, 16.6],
+#     [10.68,  0.,  20.15, 37.19, 12.82,  20.73, 20.81],
+#     [24.32,  20.15,  0., 17.05, 31.33,  34.96,  39.74],
+#     [40.51, 37.19, 17.05,  0., 48.12,  50.47,  56.5],
+#     [ 8.876, 12.82, 31.33, 48.12,  0., 10.63, 8.407],
+#     [11.08,  20.73,  34.96,  50.47, 10.63,  0.,  12.26],
+#     [16.6, 20.81,  39.74,  56.5, 8.407,  12.26,  0.]
+#                                 ])
+city_names = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
+# distance between city 
+dist = np.array(
+    [
+        [0.,          10.48113508,  18.51467981,  18.54127528,  5.7385456,    13.03650962,  20.09902115], 
+        [10.48113508,  0.,           9.15619145,   15.04929904,  10.56004164,  6.52505341,   13.22524436],
+        [18.51467981,  9.15619145,   0.,           11.47944457,  16.1038714,   6.31668958,   6.33708216 ],
+        [18.54127528,  15.04929904,  11.47944457,  0.,           13.32823709,  8.5872692,    6.16996146 ],
+        [5.7385456,    10.56004164,  16.1038714,   13.32823709,  0.,           9.86908414,   16.01052999],
+        [13.03650962,  6.52505341,   6.31668958,   8.5872692,    9.86908414,   0.,           7.31033037 ],
+        [20.09902115,  13.22524436,  6.33708216,   6.16996146,   16.01052999,  7.31033037,   0.         ]
+        ]
+    )
 nb_edges = len(city_names)*(len(city_names)-1)
-dist = np.array([
-    [ 0., 10.68, 24.32, 40.51,  8.876, 11.08, 16.6],
-    [10.68,  0.,  20.15, 37.19, 12.82,  20.73, 20.81],
-    [24.32,  20.15,  0., 17.05, 31.33,  34.96,  39.74],
-    [40.51, 37.19, 17.05,  0., 48.12,  50.47,  56.5],
-    [ 8.876, 12.82, 31.33, 48.12,  0., 10.63, 8.407],
-    [11.08,  20.73,  34.96,  50.47, 10.63,  0.,  12.26],
-    [16.6, 20.81,  39.74,  56.5, 8.407,  12.26,  0.]
-                                ])
-
-
-def CalProfit(*answer_set):
+def fly_time(i, j):
+    return dist[i][j]/velocity * 60
+def CalProfit(answer_set):
 
     # Load the Excel file and read only the first 8 rows with the first row as the index
     MER_LMP = {
         'MER': pd.read_excel(fr'MER_LMP_Information.xlsx', sheet_name='MER', nrows=7, index_col=0),
         'LMP': pd.read_excel(fr'MER_LMP_Information.xlsx', sheet_name='LMP', nrows=7, index_col=0)
     }
-
+    # print(MER_LMP['MER'])
     # Replace index row with ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
-    # city_names = ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
-    # # distance between city ["jfk", "lga", "teb", "ryend", "cri", "cimbl", "dandy"]
-    # dist = np.array(
-    #     [
-    #         [0.,          10.48113508,  18.51467981,  18.54127528,  5.7385456,    13.03650962,  20.09902115], 
-    #         [10.48113508,  0.,           9.15619145,   15.04929904,  10.56004164,  6.52505341,   13.22524436],
-    #         [18.51467981,  9.15619145,   0.,           11.47944457,  16.1038714,   6.31668958,   6.33708216 ],
-    #         [18.54127528,  15.04929904,  11.47944457,  0.,           13.32823709,  8.5872692,    6.16996146 ],
-    #         [5.7385456,    10.56004164,  16.1038714,   13.32823709,  0.,           9.86908414,   16.01052999],
-    #         [13.03650962,  6.52505341,   6.31668958,   8.5872692,    9.86908414,   0.,           7.31033037 ],
-    #         [20.09902115,  13.22524436,  6.33708216,   6.16996146,   16.01052999,  7.31033037,   0.         ]
-    #         ]
-    #     )
-    
+
+
 
     MER_LMP['MER'].index = city_names
     MER_LMP['LMP'].index = city_names
@@ -62,19 +64,17 @@ def CalProfit(*answer_set):
     MER_LMP['MER'].index.name = 'city'
     MER_LMP['LMP'].index.name = 'city'
 
-    def fly_time(i, j):
-        return dist[i][j]/velocity * 60
 
 
 
 
-    
     # dist = np.round(dist)
     min_trav_time = np.min(dist[np.nonzero(dist)])/velocity*60
     # min_trav_time=2.2
     N_steps = int(np.floor(180/min_trav_time))
     # Create a DataFrame with the distance matrix
-    dist = pd.DataFrame(dist, index=city_names, columns=city_names)
+    df_dist = pd.DataFrame(dist, index=city_names, columns=city_names)
+
     # Read output_2352.txt
     # with open(fr'solver_to_answer_set.txt', 'r') as file:
     #     content = file.read()
@@ -82,8 +82,9 @@ def CalProfit(*answer_set):
     # Remove content until the first newline character, including the newline itself
 
     # Separate file content into a list of strings where separation is a blank space
-    list_of_strings = answer_set[0]
 
+    
+    list_of_strings = answer_set.split(' ')
     # Get only strings that have the substring 'dl(start_v' or 'dl(arrival_v' or 'as_w'
     # filtered_strings = [s for s in list_of_strings if 'as' in s or 'dl(arrival_v' in s]
     filtered_strings = list_of_strings
@@ -118,16 +119,16 @@ def CalProfit(*answer_set):
                 # nested_dict[agent_id][step_id]['TIME_ARRIVAL'] = int(time_arrival)
                 # nested_dict[agent_id][step_id-1]['next_arrival_v'] = s
                 # nested_dict[agent_id][step_id-1]['next_TIME_ARRIVAL'] = int(time_arrival)
-                flight_time = dist[vertiport_departure][vertiport_arrival]*0.6
-                charge_time = flight_time*24/25
-                dict_check_asp[int(agent_id)][step_id]['flight_time'] = flight_time
+                # flight_time = df_dist[vertiport_departure][vertiport_arrival]*0.6
+                # charge_time = flight_time*24/25
+                
                 dict_check_asp[int(agent_id)][step_id][2] = s
 
                 dict_check_asp[int(agent_id)][step_id+1]["start_charge_asp"] = int(time_arrival)
                 dict_check_asp[int(agent_id)][step_id]["destination"] = vertiport_arrival
                 if "start_charge" in dict_check_asp[int(agent_id)][step_id]:                 
-                    dict_check_asp[int(agent_id)][step_id]["stop_charge_asp"] = dict_check_asp[int(agent_id)][step_id]["start_charge"] + np.round(dist[vertiport_departure][vertiport_arrival]*24/25)
-                charge_time_residual = np.round(dist[vertiport_departure][vertiport_arrival]*24/25) - (dist[vertiport_departure][vertiport_arrival]*24/25) # plus into horizon. 
+                    dict_check_asp[int(agent_id)][step_id]["stop_charge_asp"] = dict_check_asp[int(agent_id)][step_id]["start_charge"] + np.round(df_dist[vertiport_departure][vertiport_arrival]*24/25)
+                charge_time_residual = np.round(df_dist[vertiport_departure][vertiport_arrival]*24/25) - (df_dist[vertiport_departure][vertiport_arrival]*24/25) # plus into horizon.
         elif 'passengers_served' in s:
             match = passengers_served_pattern.match(s)
             if match:
@@ -137,12 +138,14 @@ def CalProfit(*answer_set):
             match = as_pattern.match(s)
             if match:
                 agent_id, vertiport_departure, vertiport_arrival, weight, step_id = match.groups()
-                dict_check_asp[int(agent_id)][int(step_id)]['revenue'] = int(weight) * dist.loc[vertiport_departure, vertiport_arrival] * 0.5
+                dict_check_asp[int(agent_id)][int(step_id)]['revenue'] = int(weight) * df_dist.loc[vertiport_departure, vertiport_arrival] * 0.5
+                flight_time = df_dist[vertiport_departure][vertiport_arrival]*0.6
+                dict_check_asp[int(agent_id)][int(step_id)]['flight_time'] = flight_time
                 step_id = int(step_id)
                 dict_check_asp[int(agent_id)][int(step_id)]['weight'] = int(weight)
                 # nested_dict[agent_id][step_id-1]['as'] = s
                 nested_dict[agent_id][step_id-1]['VERTIPORT'] = vertiport_departure
-                nested_dict[agent_id][step_id-1]['DISTANCE'] = dist[vertiport_departure][ vertiport_arrival]
+                nested_dict[agent_id][step_id-1]['DISTANCE'] = df_dist[vertiport_departure][ vertiport_arrival]
                 sort_asp[int(agent_id)][int(step_id)]['route'] = s
 
 
@@ -344,17 +347,16 @@ def CalProfit(*answer_set):
     print(f'Number of flights that agents carry zero customer: {empty_flight_count}')
     return total_revenue, total_em_cost, total_chg_cost, total_revenue-total_em_cost -total_chg_cost
 
-def EstimateMinAgents(horizon, b_init, demand_cust, aircraft_capacity):
+def EstimateMinAgents(horizon, b_init, demand_cust:list, aircraft_capacity):
     """
     b_init in charging minute
     """
-    minimum_flights_per_edge = math.ceil(demand_cust/aircraft_capacity)
-    require_operation_time = np.sum(dist)*(60/velocity + e_dischg*60/g_i)
-    require_operation_time_serve_all_cust = minimum_flights_per_edge * require_operation_time
-    min_number_agents = math.ceil(require_operation_time_serve_all_cust/(horizon+b_init))
-    min_number_segments = math.ceil((minimum_flights_per_edge*nb_edges)/min_number_agents)
+    minimum_flights_per_edge = [math.ceil(demand/aircraft_capacity) for demand in demand_cust]
+    require_operation_time = dist*(60/velocity + e_dischg*60/g_i)
+    require_operation_time_serve_all_cust = np.array(minimum_flights_per_edge) * require_operation_time.flatten()
+    min_number_agents = np.ceil(sum(require_operation_time_serve_all_cust)/(horizon+b_init)).astype(int)
+    min_number_segments = (np.ceil(np.sum(minimum_flights_per_edge)/min_number_agents)).astype(int)
     return min_number_agents, min_number_segments
 
 if __name__ == "__main__":
-    print(EstimateMinAgents(360, 60, 30, 4))
-# %%
+    CalProfit('as(0,(jfk,teb),2,1). as(1,(lga,cimbl),2,1). as(2,(teb,cimbl),2,1). as(3,(ryend,dandy),2,1). as(4,(cri,cimbl),4,1). as(5,(cimbl,jfk),0,1). as(6,(dandy,jfk),0,1). as(7,(jfk,ryend),1,1). as(8,(lga,ryend),0,1). as(9,(teb,cri),4,1). as(0,(teb,lga),3,2). as(1,(cimbl,dandy),4,2). as(2,(cimbl,dandy),3,2). as(3,(dandy,cri),2,2). as(4,(cimbl,dandy),2,2). as(5,(jfk,cri),4,2). as(6,(jfk,dandy),1,2). as(7,(ryend,jfk),2,2). as(8,(ryend,dandy),0,2). as(9,(cri,dandy),3,2). as(0,(lga,cimbl),4,3). as(1,(dandy,cimbl),2,3). as(2,(dandy,jfk),3,3). as(3,(cri,lga),1,3). as(4,(dandy,cimbl),4,3). as(5,(cri,cimbl),0,3). as(6,(dandy,teb),1,3). as(7,(jfk,lga),0,3). as(8,(dandy,jfk),4,3). as(9,(dandy,lga),0,3). as(0,(cimbl,dandy),0,4). as(1,(cimbl,dandy),0,4). as(2,(jfk,dandy),1,4). as(3,(lga,dandy),0,4). as(4,(cimbl,dandy),1,4). as(5,(cimbl,dandy),0,4). as(6,(teb,dandy),1,4). as(7,(lga,dandy),0,4). as(8,(jfk,dandy),0,4). as(9,(lga,jfk),1,4). as(0,(dandy,cimbl),0,5). as(1,(dandy,cimbl),2,5). as(2,(dandy,cimbl),0,5). as(3,(dandy,cimbl),0,5). as(4,(dandy,cimbl),0,5). as(5,(dandy,cimbl),0,5). as(6,(dandy,cimbl),0,5). as(7,(dandy,cimbl),0,5). as(8,(dandy,cimbl),0,5). as(9,(jfk,ryend),0,5). as(0,(cimbl,dandy),0,6). as(1,(cimbl,dandy),0,6). as(2,(cimbl,dandy),0,6). as(3,(cimbl,dandy),0,6). as(4,(cimbl,dandy),0,6). as(5,(cimbl,dandy),0,6). as(6,(cimbl,dandy),0,6). as(7,(cimbl,dandy),0,6). as(8,(cimbl,jfk),0,6). as(9,(ryend,jfk),0,6). as(0,(dandy,cimbl),0,7). as(1,(dandy,cri),0,7). as(2,(dandy,ryend),0,7). as(3,(dandy,cri),0,7). as(4,(dandy,cimbl),0,7). as(5,(dandy,lga),0,7). as(6,(dandy,ryend),2,7). as(7,(dandy,cimbl),0,7). as(8,(jfk,lga),0,7). as(9,(jfk,dandy),0,7). dl(arrival(0,(jfk,teb),1),11). dl(start(0,(teb,lga),2),20). dl(arrival(1,(lga,cimbl),1),4). dl(start(1,(cimbl,dandy),2),11). dl(arrival(2,(teb,cimbl),1),4). dl(start(2,(cimbl,dandy),2),11). dl(arrival(3,(ryend,dandy),1),4). dl(start(3,(dandy,cri),2),19). dl(arrival(4,(cri,cimbl),1),6). dl(start(4,(cimbl,dandy),2),13). dl(arrival(5,(cimbl,jfk),1),8). dl(start(5,(jfk,cri),2),14). dl(arrival(6,(dandy,jfk),1),12). dl(start(6,(jfk,dandy),2),31). dl(arrival(7,(jfk,ryend),1),11). dl(start(7,(ryend,jfk),2),29). dl(arrival(8,(lga,ryend),1),9). dl(start(8,(ryend,dandy),2),15). dl(arrival(9,(teb,cri),1),10). dl(start(9,(cri,dandy),2),25). dl(arrival(0,(teb,lga),2),25). dl(start(0,(lga,cimbl),3),31). dl(arrival(1,(cimbl,dandy),2),15). dl(start(1,(dandy,cimbl),3),22). dl(arrival(2,(cimbl,dandy),2),15). dl(start(2,(dandy,jfk),3),34). dl(arrival(3,(dandy,cri),2),29). dl(start(3,(cri,lga),3),39). dl(arrival(4,(cimbl,dandy),2),17). dl(start(4,(dandy,cimbl),3),24). dl(arrival(5,(jfk,cri),2),17). dl(start(5,(cri,cimbl),3),26). dl(arrival(6,(jfk,dandy),2),43). dl(start(6,(dandy,teb),3),49). dl(arrival(7,(ryend,jfk),2),40). dl(start(7,(jfk,lga),3),50). dl(arrival(8,(ryend,dandy),2),19). dl(start(8,(dandy,jfk),3),38). dl(arrival(9,(cri,dandy),2),35). dl(start(9,(dandy,lga),3),48). dl(arrival(0,(lga,cimbl),3),35). dl(start(0,(cimbl,dandy),4),42). dl(arrival(1,(dandy,cimbl),3),26). dl(start(1,(cimbl,dandy),4),33). dl(arrival(2,(dandy,jfk),3),46). dl(start(2,(jfk,dandy),4),65). dl(arrival(3,(cri,lga),3),45). dl(start(3,(lga,dandy),4),58). dl(arrival(4,(dandy,cimbl),3),28). dl(start(4,(cimbl,dandy),4),35). dl(arrival(5,(cri,cimbl),3),32). dl(start(5,(cimbl,dandy),4),39). dl(arrival(6,(dandy,teb),3),53). dl(start(6,(teb,dandy),4),59). dl(arrival(7,(jfk,lga),3),56). dl(start(7,(lga,dandy),4),69). dl(arrival(8,(dandy,jfk),3),50). dl(start(8,(jfk,dandy),4),69). dl(arrival(9,(dandy,lga),3),56). dl(start(9,(lga,jfk),4),66). dl(arrival(0,(cimbl,dandy),4),46). dl(start(0,(dandy,cimbl),5),53). dl(arrival(1,(cimbl,dandy),4),37). dl(start(1,(dandy,cimbl),5),44). dl(arrival(2,(jfk,dandy),4),77). dl(start(2,(dandy,cimbl),5),84). dl(arrival(3,(lga,dandy),4),66). dl(start(3,(dandy,cimbl),5),73). dl(arrival(4,(cimbl,dandy),4),39). dl(start(4,(dandy,cimbl),5),46). dl(arrival(5,(cimbl,dandy),4),43). dl(start(5,(dandy,cimbl),5),50). dl(arrival(6,(teb,dandy),4),63). dl(start(6,(dandy,cimbl),5),70). dl(arrival(7,(lga,dandy),4),77). dl(start(7,(dandy,cimbl),5),84). dl(arrival(8,(jfk,dandy),4),81). dl(start(8,(dandy,cimbl),5),88). dl(arrival(9,(lga,jfk),4),72). dl(start(9,(jfk,ryend),5),90). dl(arrival(0,(dandy,cimbl),5),57). dl(start(0,(cimbl,dandy),6),64). dl(arrival(1,(dandy,cimbl),5),48). dl(start(1,(cimbl,dandy),6),55). dl(arrival(2,(dandy,cimbl),5),88). dl(start(2,(cimbl,dandy),6),95). dl(arrival(3,(dandy,cimbl),5),77). dl(start(3,(cimbl,dandy),6),84). dl(arrival(4,(dandy,cimbl),5),50). dl(start(4,(cimbl,dandy),6),57). dl(arrival(5,(dandy,cimbl),5),54). dl(start(5,(cimbl,dandy),6),61). dl(arrival(6,(dandy,cimbl),5),74). dl(start(6,(cimbl,dandy),6),81). dl(arrival(7,(dandy,cimbl),5),88). dl(start(7,(cimbl,dandy),6),95). dl(arrival(8,(dandy,cimbl),5),92). dl(start(8,(cimbl,jfk),6),105). dl(arrival(9,(jfk,ryend),5),101). dl(start(9,(ryend,jfk),6),119). dl(arrival(0,(cimbl,dandy),6),68). dl(start(0,(dandy,cimbl),7),75). dl(arrival(1,(cimbl,dandy),6),59). dl(start(1,(dandy,cri),7),74). dl(arrival(2,(cimbl,dandy),6),99). dl(start(2,(dandy,ryend),7),105). dl(arrival(3,(cimbl,dandy),6),88). dl(start(3,(dandy,cri),7),103). dl(arrival(4,(cimbl,dandy),6),61). dl(start(4,(dandy,cimbl),7),68). dl(arrival(5,(cimbl,dandy),6),65). dl(start(5,(dandy,lga),7),78). dl(arrival(6,(cimbl,dandy),6),85). dl(start(6,(dandy,ryend),7),91). dl(arrival(7,(cimbl,dandy),6),99). dl(start(7,(dandy,cimbl),7),106). dl(arrival(8,(cimbl,jfk),6),113). dl(start(8,(jfk,lga),7),123). dl(arrival(9,(ryend,jfk),6),130). dl(start(9,(jfk,dandy),7),149). dl(start(0,(jfk,teb),1),0). dl(start(1,(lga,cimbl),1),0). dl(start(2,(teb,cimbl),1),0). dl(start(3,(ryend,dandy),1),0). dl(start(4,(cri,cimbl),1),0). dl(start(5,(cimbl,jfk),1),0). dl(start(6,(dandy,jfk),1),0). dl(start(7,(jfk,ryend),1),0). dl(start(8,(lga,ryend),1),0). dl(start(9,(teb,cri),1),0). dl(arrival(0,(dandy,cimbl),7),79). dl(arrival(1,(dandy,cri),7),84). dl(arrival(2,(dandy,ryend),7),109). dl(arrival(3,(dandy,cri),7),113). dl(arrival(4,(dandy,cimbl),7),72). dl(arrival(5,(dandy,lga),7),86). dl(arrival(6,(dandy,ryend),7),95). dl(arrival(7,(dandy,cimbl),7),110). dl(arrival(8,(jfk,lga),7),129). dl(arrival(9,(jfk,dandy),7),161).')
