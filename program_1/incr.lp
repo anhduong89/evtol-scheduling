@@ -50,7 +50,7 @@ assigned(L, t) :- vertiport(L), at(_, L, t-1), as(_, (L, L'), W, t), W > 0.
 :- as(_,(V,V),W,t), W!=0.
 
 % Prioritize scheduling higher-revenue flight
-% #heuristic as(_,_,W,_). [W,true]
+#heuristic as(_,_,W,_). [W,true]
  
 #program check(t).
 
